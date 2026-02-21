@@ -725,7 +725,7 @@
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.02);">
             <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Evidence basis</td>
             <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">800,000 pre-ChatGPT academic documents; zero false accusations in Weber-Wulff et al. (2023) independent testing</td>
-            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">91 papers across two amnesty studies — not one flagged student came forward claiming innocence</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">91 papers across two amnesty studies — no flagged student disputed their flag; only flagged students came forward to admit AI use (plus one unflagged false negative)</td>
           </tr>
           <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
             <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Accuracy on fully human-written text (cleared correctly)</td>
@@ -806,7 +806,7 @@
     <div style="background:rgba(0,0,0,0.25); border-radius:8px; padding:16px 20px; border-left:2px solid var(--green);">
       <strong style="color:var(--green); font-size:12px; font-family:'DM Mono',monospace; letter-spacing:1px; text-transform:uppercase;">What This Means for ASD</strong>
       <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-top:8px; margin-bottom:0;">
-        Our internal amnesty data shows a <strong style="color:var(--text-light);">0% false positive rate</strong> across 91 papers — not one flagged student came forward to claim innocence, even though amnesty was explicitly offered with no consequences for doing so. The external research and the internal data point in the same direction.
+        Across 91 papers, amnesty was offered to all students — flagged or not. The students who came forward were overwhelmingly the ones Turnitin had flagged. One unflagged student came forward admitting AI use Turnitin had missed — a confirmed false negative. Not one flagged student came forward to dispute their result. This does not prove zero false positives exist, but it strongly suggests they are rare: if a student had been wrongly accused, an anonymous, consequence-free amnesty was the perfect opportunity to say so. None did.
       </p>
     </div>
   </div>
@@ -1143,7 +1143,7 @@
         </div>
       </div>
       <div style="margin-top:12px; background:rgba(39,174,96,0.07); border:1px solid rgba(39,174,96,0.2); border-radius:6px; padding:14px 18px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.6;">
-        <strong style="color:#2ecc71;">No 0% students came forward in the EE study.</strong> In the AP Language study, one student cleared at 0% did come forward — not to confess, but to clear their name. In the EE amnesty, not one student in that position felt the need to do so.
+        <strong style="color:#2ecc71;">No unflagged students came forward in the EE study.</strong> Every student who came forward had been flagged by Turnitin. The pattern is clean.
       </div>
     </div>
 
@@ -1333,7 +1333,7 @@
         The students who came forward were <span style="color:var(--red-bright);">overwhelmingly the ones Turnitin flagged.</span> The students Turnitin cleared stayed silent.
       </div>
       <div style="font-size:13px; color:var(--text-muted); font-weight:300; max-width:620px; margin:0 auto; line-height:1.7;">
-        One student cleared at 0% did come forward — and they had nothing to confess. They simply wanted to clear their name. Every other student Turnitin identified as AI-assisted either confessed or stayed silent. <strong style="color:var(--text-light);">Not one flagged student tried to come forward and argue the tool was wrong about them.</strong> The 6 who stayed silent remain unresolved — they may be refusing to engage, or they may be false positives. That distinction matters and requires follow-up.
+        Students did not know whether they had been flagged — that was the design of the amnesty. Despite this, the pattern is striking: the students who came forward were overwhelmingly the ones Turnitin had identified. One unflagged student came forward and admitted AI use — a false negative the tool missed. <strong style="color:var(--text-light);">Not one flagged student came forward to argue the tool was wrong about them.</strong> The 6 who stayed silent remain unresolved — they may be refusing to engage, or some may be false positives the tool incorrectly caught. That distinction requires a supervised writing comparison to resolve.
       </div>
   </div>
 </div>
@@ -1408,8 +1408,8 @@
           <div style="font-family:'Playfair Display',serif; font-size:48px; font-weight:900; color:var(--white); line-height:1;">77%</div>
           <div style="font-size:12px; color:var(--text-muted); margin:8px 0 20px;">20 of 26 flagged<br>students came forward</div>
           <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;">
-            <div style="font-family:'Playfair Display',serif; font-size:36px; font-weight:900; color:var(--green); line-height:1;">0</div>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">students cleared at 0%<br>who came forward —<br>across either study</div>
+            <div style="font-family:'Playfair Display',serif; font-size:36px; font-weight:900; color:var(--amber); line-height:1;">1</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">confirmed false negative —<br>unflagged student admitted<br>AI use Turnitin missed</div>
           </div>
         </div>
       </div>
@@ -1541,8 +1541,8 @@
 <!-- SECTION: THE TREND -->
 <div class="section">
   <div class="section-label">Section 07 — The Trend Line</div>
-  <div class="section-title">AI Use Is Growing. In Four Months, It Got Significantly Worse.</div>
-  <p class="section-intro">The EE submissions came in September 2025. The TOK essays came in January 2026. No consequences were issued in between. The data shows exactly what happens when there is no institutional response.</p>
+  <div class="section-title">AI Flagging Rates Increased Significantly Over Four Months.</div>
+  <p class="section-intro">The EE submissions came in September 2025. The TOK essays came in January 2026. No consequences were issued in between. Flagging rates rose 63% and average AI scores among flagged students increased substantially. Two explanations are possible: Turnitin's detection model improved between September and January, or students are using AI more. Both may be true. The absence of consequences between the two submissions, however, makes increased student use the more likely driver.</p>
 
   <!-- MAIN BEFORE/AFTER COMPARISON -->
   <div style="display:grid; grid-template-columns: 1fr auto 1fr; gap:0; align-items:stretch; margin-bottom:28px;">
@@ -1678,8 +1678,8 @@
   <div style="background:linear-gradient(135deg, rgba(192,57,43,0.12), rgba(10,22,40,0.9)); border:1px solid rgba(192,57,43,0.3); border-radius:10px; padding:28px 36px; display:grid; grid-template-columns:auto 1fr; gap:28px; align-items:center;">
     <div style="font-family:'Playfair Display',serif; font-size:64px; font-weight:900; color:var(--red-bright); line-height:1; white-space:nowrap;">4 mo.</div>
     <div>
-      <div style="font-family:'Playfair Display',serif; font-size:20px; color:var(--white); font-weight:700; margin-bottom:10px; line-height:1.4;">Four months passed. No consequences were issued. AI use increased by 63% and became more severe.</div>
-      <div style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7;">Students who used AI in September and faced no repercussions used it again in January — more freely, at higher rates, with greater reliance. The pattern is not random. It reflects a rational response to an environment where there are no consequences. <strong style="color:var(--text-light);">The absence of policy is itself a policy — and students have learned to read it.</strong></div>
+      <div style="font-family:'Playfair Display',serif; font-size:20px; color:var(--white); font-weight:700; margin-bottom:10px; line-height:1.4;">Four months passed. No consequences were issued. Flagging rates rose 63% and severity increased.</div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7;">Whether the increase reflects more AI use, improved detection, or both — the direction is clear and the trend is concerning. What we can say with confidence: no policy change occurred between September and January, and the numbers moved sharply in the wrong direction. <strong style="color:var(--text-light);">An environment without consequences is an environment that teaches students there are none.</strong></div>
     </div>
   </div>
 </div>
