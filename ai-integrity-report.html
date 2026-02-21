@@ -407,21 +407,23 @@
     border-radius: 0 0 8px 8px;
   }
   .policy-item {
-    display: flex;
-    gap: 10px;
+    display: block;
+    padding-left: 20px;
+    position: relative;
     margin-bottom: 10px;
     font-size: 13px;
     color: var(--text-muted);
-    line-height: 1.5;
+    line-height: 1.7;
   }
   .policy-item:last-child { margin-bottom: 0; }
   .policy-item::before {
     content: '→';
     color: var(--red-bright);
-    flex-shrink: 0;
     font-weight: 700;
     font-size: 12px;
-    margin-top: 2px;
+    position: absolute;
+    left: 0;
+    top: 2px;
   }
 
   /* ── PROBLEM BOX ── */
@@ -552,7 +554,7 @@
         This report presents data collected across multiple studies conducted at ASD between 2023 and 2026. The evidence shows that <strong style="color:var(--white);">AI use in student academic writing is widespread, increasing, and going unaddressed</strong> — not because we lack a detection tool, but because we lack institutional consequences.
       </p>
       <p style="font-size:14px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:14px;">
-        Turnitin, which ASD already licenses, has been validated both by independent research and by our own internal testing as a reliable detector of AI-generated writing at the 20% threshold and above. Two separate amnesty studies — one in AP Language, one for IB Extended Essays — produced near-identical results: flagged students came forward, unflagged students did not, and confession rates among flagged students exceeded 75% in both cases.
+        Turnitin, which ASD already licenses, has been validated both by independent research and by our own internal testing as a reliable detector of AI-generated writing at the 20% threshold and above. Two separate amnesty studies — one in AP Language, one for IB Extended Essays — produced near-identical results: flagged students came forward at high rates, and confession rates among flagged students exceeded 75% in both cases. One unflagged student did come forward — to report that they had not used AI and to clear their name.
       </p>
       <p style="font-size:14px; color:var(--text-muted); font-weight:300; line-height:1.8;">
         Despite this, our current response — accepting Google Docs revision history as sufficient proof of authorship — is easily circumvented and sends a clear message to students: there are no real consequences. The data from IB Cohort 14 shows the result: a 63% increase in flagging rates between September 2025 and January 2026, with no policy change in between.
@@ -767,6 +769,44 @@
       </p>
       <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8;">
         When we see a Cohort 14 student returning 40%, 60%, or 89% AI on their Extended Essay or TOK essay, the research gives us high confidence that the flag is accurate. The question is no longer <em>"is this real?"</em> — the question is <em>"what are we going to do about it?"</em>
+      </p>
+    </div>
+  </div>
+
+  <!-- EXTERNAL FALSE POSITIVE RESEARCH -->
+  <div style="background:rgba(39,174,96,0.06); border:1px solid rgba(39,174,96,0.2); border-left:4px solid var(--green); border-radius:8px; padding:24px 28px; margin-top:0;">
+    <div class="section-label" style="color:var(--green); margin-bottom:10px;">External Research — False Positive Rates at the 20%+ Threshold</div>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:18px;">
+      A common objection to AI detection flags is: <em>"What if these are all false positives?"</em> This is a legitimate question — and external research answers it directly. The concern about false positives is real at <strong style="color:var(--text-light);">low scores</strong>. At the 20%+ threshold Turnitin specifically designed to minimize false positives, independent research consistently finds the rate to be very low. Below is what the evidence actually shows.
+    </p>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:18px;">
+
+      <div style="background:rgba(0,0,0,0.2); border-radius:8px; padding:18px 20px;">
+        <div style="font-size:11px; font-family:'DM Mono',monospace; letter-spacing:1px; text-transform:uppercase; color:var(--green); margin-bottom:8px;">DecEptioner Independent Study (2024)</div>
+        <div style="font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--white); margin-bottom:6px;">1.3%</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.6;">False positive rate across 78 human-written documents. 98.7% of genuine human text was correctly cleared. Only 1 out of 78 human papers was wrongly flagged — and Turnitin's precision on AI-flagged texts was 98.2%.</div>
+      </div>
+
+      <div style="background:rgba(0,0,0,0.2); border-radius:8px; padding:18px 20px;">
+        <div style="font-size:11px; font-family:'DM Mono',monospace; letter-spacing:1px; text-transform:uppercase; color:var(--green); margin-bottom:8px;">Turnitin CPO — Validated Against 800,000 Pre-ChatGPT Documents</div>
+        <div style="font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--white); margin-bottom:6px;">&lt;1%</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.6;">Turnitin's chief product officer reported a false positive rate below 1% at the 20%+ threshold, validated against 800,000 documents written before ChatGPT existed — documents the model had never encountered and had no AI content.</div>
+      </div>
+
+
+
+      <div style="background:rgba(0,0,0,0.2); border-radius:8px; padding:18px 20px;">
+        <div style="font-size:11px; font-family:'DM Mono',monospace; letter-spacing:1px; text-transform:uppercase; color:var(--red-bright); margin-bottom:8px;">Washington Post (Fowler, 2023) — The Outlier</div>
+        <div style="font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--red-bright); margin-bottom:6px;">50%</div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.6;">The most-cited alarm figure — but from a sample of only 16 documents, tested before Turnitin's major 2024 model updates and before the 20% threshold floor was introduced. It is the outlier in the literature, not the consensus.</div>
+      </div>
+
+    </div>
+
+    <div style="background:rgba(0,0,0,0.25); border-radius:8px; padding:16px 20px; border-left:2px solid var(--green);">
+      <strong style="color:var(--green); font-size:12px; font-family:'DM Mono',monospace; letter-spacing:1px; text-transform:uppercase;">What This Means for ASD</strong>
+      <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-top:8px; margin-bottom:0;">
+        Our internal amnesty data shows a <strong style="color:var(--text-light);">0% false positive rate</strong> across 91 papers — not one flagged student came forward to claim innocence, even though amnesty was explicitly offered with no consequences for doing so. The external research and the internal data point in the same direction.
       </p>
     </div>
   </div>
@@ -1057,7 +1097,7 @@
         <div class="stat-card warning">
           <div class="stat-num amber" style="font-size:32px;">4</div>
           <div class="stat-label">Flagged — No Response</div>
-          <div class="stat-desc">4 flagged students never came forward. These cases require institutional follow-up.</div>
+          <div class="stat-desc">4 flagged students never came forward. These are unresolved cases: they may be refusing to admit AI use, or they may be genuine false positives. Without a supervised writing comparison, we cannot determine which.</div>
         </div>
       </div>
     </div>
@@ -1065,9 +1105,90 @@
 
   <div style="background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:20px 24px;">
     <div class="section-label" style="margin-bottom:10px;">The Critical Takeaway</div>
-    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7;">When students were given a penalty-free opportunity to come forward, <strong style="color:var(--text-light)">the vast majority of confessions came from Turnitin's flagged group</strong>. The tool did not cast a wide net and scoop up innocent students — it precisely identified the students who had used AI. This is not a coincidence. This is validation.</p>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7;">When students were given a penalty-free opportunity to come forward, <strong style="color:var(--text-light)">the vast majority of confessions came from Turnitin's flagged group</strong>. The 4 who were flagged and stayed silent are unresolved — they may be refusing to admit use, or they may represent genuine false positives that the tool produced. A supervised writing sample is the only way to resolve that ambiguity. What the amnesty cannot tell us is whether silence means guilt or innocence. What it does tell us clearly: the tool is not producing a flood of false positives that are driving innocent students to defend themselves.</p>
   </div>
 </div>
+
+
+<!-- SECTION 3B: EE AMNESTY + COMBINED -->
+<div class="section section-alt">
+  <div class="section-label">Section 03b — Extended Essay Amnesty & Combined Findings</div>
+  <div class="section-title">The Pattern Repeats: EE Amnesty Confirms Everything</div>
+  <p class="section-intro">After running the Cohort 14 EE data through Turnitin, we offered amnesty to the 8 flagged students. The results mirrored the AP Language study with striking consistency.</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:28px;">
+    <div>
+      <div class="section-label" style="margin-bottom:16px;">EE Amnesty Results</div>
+      <div class="sankey">
+        <div class="sankey-left">
+          <div class="big">8</div>
+          <div class="lbl">EE students<br>flagged &gt;20%</div>
+        </div>
+        <div class="sankey-right">
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--red-bright)"></div>
+            <div class="sankey-item-label">Replied to amnesty email — almost immediately — admitting limited AI use</div>
+            <div class="sankey-item-num" style="color:var(--red-bright)">6</div>
+          </div>
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--text-muted)"></div>
+            <div class="sankey-item-label">Flagged — did not reply or come forward</div>
+            <div class="sankey-item-num" style="color:var(--text-muted)">2</div>
+          </div>
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--green)"></div>
+            <div class="sankey-item-label">Students at 0% AI who came forward</div>
+            <div class="sankey-item-num" style="color:var(--green)">0</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px; background:rgba(39,174,96,0.07); border:1px solid rgba(39,174,96,0.2); border-radius:6px; padding:14px 18px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.6;">
+        <strong style="color:#2ecc71;">No 0% students came forward in the EE study.</strong> In the AP Language study, one student cleared at 0% did come forward — not to confess, but to clear their name. In the EE amnesty, not one student in that position felt the need to do so.
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom:16px;">The Speed of Confession</div>
+      <div class="stat-card danger" style="margin-bottom:14px;">
+        <div class="stat-num red" style="font-size:36px;">Almost<br>Immediately</div>
+        <div class="stat-label">Response Time from Flagged Students</div>
+        <div class="stat-desc">6 of 8 flagged EE students replied to the amnesty email quickly — without prompting, follow-up, or pressure. They knew. The tool knew.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.6;">
+        The speed and voluntariness of these confessions is significant. Students who use AI know they used AI. When offered a safe exit, they take it — and they take it fast. The 2 who did not respond remain unresolved: they may be refusing to engage, or they may be genuine false positives. A supervised writing comparison is the only way to resolve that distinction.
+      </div>
+    </div>
+  </div>
+
+  <!-- UNDER-REPORTING FINDING -->
+  <div style="background:linear-gradient(135deg, rgba(243,156,18,0.08), rgba(192,57,43,0.08)); border:1px solid rgba(243,156,18,0.3); border-left:4px solid var(--gold); border-radius:8px; padding:28px 32px; margin-bottom:28px;">
+    <div class="section-label" style="color:var(--gold); margin-bottom:10px;">Critical Finding — Under-Reporting of AI Use</div>
+    <h3 style="font-family:'Playfair Display',serif; font-size:20px; color:var(--gold); margin-bottom:14px;">"Light Use" That Wasn't: Students Are Not Telling the Full Truth</h3>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:16px;">
+      All 6 EE students who came forward characterized their AI use as <strong style="color:var(--text-light);">minimal and sanctioned</strong> — brainstorming, grammar checking, outlining. These are uses that fall within broadly acceptable parameters of AI assistance. However, further investigation into at least two of these students revealed a different picture: AI had been used to <strong style="color:var(--text-light);">"tighten" writing and rewrite full paragraphs</strong> — substantive authorship, not peripheral support.
+    </p>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:18px;">
+      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
+        <div style="font-size:22px; margin-bottom:6px;">💬</div>
+        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Students Said</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">"I used it for brainstorming, grammar, and outlining."</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
+        <div style="font-size:22px; margin-bottom:6px;">🔍</div>
+        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Investigation Showed</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">At least 2 students used AI to rewrite paragraphs and "tighten" prose — substantive authorship.</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
+        <div style="font-size:22px; margin-bottom:6px;">❓</div>
+        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Likely Explains the Rest</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">Remaining students are likely under-reporting, or are unconsciously influenced by AI — as documented in the AP Language Inception Effect findings.</div>
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:14px 18px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7; border-left:2px solid var(--gold);">
+      <strong style="color:var(--gold);">Implication:</strong> Self-reporting is an unreliable measure of actual AI use. Students either consciously minimize their disclosure to avoid consequences, or genuinely cannot recognize the extent to which AI has shaped their writing. Either way, self-reporting alone cannot serve as the basis for an academic integrity determination. <strong style="color:var(--text-light);">This is precisely why a supervised writing comparison is essential.</strong>
+    </div>
+  </div>
+
 
 <div class="divider"></div>
 
@@ -1200,7 +1321,7 @@
         </div>
         <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted);">
           <svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#2a3f5a"/></svg>
-          <span><strong style="color:var(--text-light)">43 students</strong> — cleared at 0% AI, stayed silent — nothing to report</span>
+          <span><strong style="color:var(--text-light)">42 students</strong> — cleared at 0% AI, stayed silent — nothing to report</span>
         </div>
       </div>
     </div>
@@ -1212,93 +1333,14 @@
         The students who came forward were <span style="color:var(--red-bright);">overwhelmingly the ones Turnitin flagged.</span> The students Turnitin cleared stayed silent.
       </div>
       <div style="font-size:13px; color:var(--text-muted); font-weight:300; max-width:620px; margin:0 auto; line-height:1.7;">
-        One student cleared at 0% did come forward — and they had nothing to confess. They simply wanted to clear their name. Every other student Turnitin identified as AI-assisted either confessed or stayed silent. <strong style="color:var(--text-light);">Not one tried to come forward and argue the tool was wrong about them.</strong> This is not a pattern. This is a <strong style="color:var(--text-light);">proof of concept.</strong>
+        One student cleared at 0% did come forward — and they had nothing to confess. They simply wanted to clear their name. Every other student Turnitin identified as AI-assisted either confessed or stayed silent. <strong style="color:var(--text-light);">Not one flagged student tried to come forward and argue the tool was wrong about them.</strong> The 6 who stayed silent remain unresolved — they may be refusing to engage, or they may be false positives. That distinction matters and requires follow-up.
       </div>
   </div>
 </div>
 
 <div class="divider"></div>
 
-<!-- SECTION 3B: EE AMNESTY + COMBINED -->
-<div class="section section-alt">
-  <div class="section-label">Section 03b — Extended Essay Amnesty & Combined Findings</div>
-  <div class="section-title">The Pattern Repeats: EE Amnesty Confirms Everything</div>
-  <p class="section-intro">After running the Cohort 14 EE data through Turnitin, we offered amnesty to the 8 flagged students. The results mirrored the AP Language study with striking consistency.</p>
-
-  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:28px;">
-    <div>
-      <div class="section-label" style="margin-bottom:16px;">EE Amnesty Results</div>
-      <div class="sankey">
-        <div class="sankey-left">
-          <div class="big">8</div>
-          <div class="lbl">EE students<br>flagged &gt;20%</div>
-        </div>
-        <div class="sankey-right">
-          <div class="sankey-item">
-            <div class="sankey-dot" style="background:var(--red-bright)"></div>
-            <div class="sankey-item-label">Replied to amnesty email — almost immediately — admitting limited AI use</div>
-            <div class="sankey-item-num" style="color:var(--red-bright)">6</div>
-          </div>
-          <div class="sankey-item">
-            <div class="sankey-dot" style="background:var(--text-muted)"></div>
-            <div class="sankey-item-label">Flagged — did not reply or come forward</div>
-            <div class="sankey-item-num" style="color:var(--text-muted)">2</div>
-          </div>
-          <div class="sankey-item">
-            <div class="sankey-dot" style="background:var(--green)"></div>
-            <div class="sankey-item-label">Students at 0% AI who came forward</div>
-            <div class="sankey-item-num" style="color:var(--green)">0</div>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:12px; background:rgba(39,174,96,0.07); border:1px solid rgba(39,174,96,0.2); border-radius:6px; padding:14px 18px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.6;">
-        <strong style="color:#2ecc71;">Zero false alarms.</strong> Not a single student who was cleared at 0% felt the need to come forward and defend themselves — because they had nothing to defend.
-      </div>
-    </div>
-
-    <div>
-      <div class="section-label" style="margin-bottom:16px;">The Speed of Confession</div>
-      <div class="stat-card danger" style="margin-bottom:14px;">
-        <div class="stat-num red" style="font-size:36px;">Almost<br>Immediately</div>
-        <div class="stat-label">Response Time from Flagged Students</div>
-        <div class="stat-desc">6 of 8 flagged EE students replied to the amnesty email quickly — without prompting, follow-up, or pressure. They knew. The tool knew.</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.6;">
-        The speed and voluntariness of these confessions is significant. Students who use AI know they used AI. When offered a safe exit, they take it — and they take it fast. The 2 who did not respond remain unresolved cases.
-      </div>
-    </div>
-  </div>
-
-  <!-- UNDER-REPORTING FINDING -->
-  <div style="background:linear-gradient(135deg, rgba(243,156,18,0.08), rgba(192,57,43,0.08)); border:1px solid rgba(243,156,18,0.3); border-left:4px solid var(--gold); border-radius:8px; padding:28px 32px; margin-bottom:28px;">
-    <div class="section-label" style="color:var(--gold); margin-bottom:10px;">Critical Finding — Under-Reporting of AI Use</div>
-    <h3 style="font-family:'Playfair Display',serif; font-size:20px; color:var(--gold); margin-bottom:14px;">"Light Use" That Wasn't: Students Are Not Telling the Full Truth</h3>
-    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:16px;">
-      All 6 EE students who came forward characterized their AI use as <strong style="color:var(--text-light);">minimal and sanctioned</strong> — brainstorming, grammar checking, outlining. These are uses that fall within broadly acceptable parameters of AI assistance. However, further investigation into at least two of these students revealed a different picture: AI had been used to <strong style="color:var(--text-light);">"tighten" writing and rewrite full paragraphs</strong> — substantive authorship, not peripheral support.
-    </p>
-    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:18px;">
-      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
-        <div style="font-size:22px; margin-bottom:6px;">💬</div>
-        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Students Said</div>
-        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">"I used it for brainstorming, grammar, and outlining."</div>
-      </div>
-      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
-        <div style="font-size:22px; margin-bottom:6px;">🔍</div>
-        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Investigation Showed</div>
-        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">At least 2 students used AI to rewrite paragraphs and "tighten" prose — substantive authorship.</div>
-      </div>
-      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
-        <div style="font-size:22px; margin-bottom:6px;">❓</div>
-        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Likely Explains the Rest</div>
-        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">Remaining students are likely under-reporting, or are unconsciously influenced by AI — as documented in the AP Language Inception Effect findings.</div>
-      </div>
-    </div>
-    <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:14px 18px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7; border-left:2px solid var(--gold);">
-      <strong style="color:var(--gold);">Implication:</strong> Self-reporting is an unreliable measure of actual AI use. Students either consciously minimize their disclosure to avoid consequences, or genuinely cannot recognize the extent to which AI has shaped their writing. Either way, self-reporting alone cannot serve as the basis for an academic integrity determination. <strong style="color:var(--text-light);">This is precisely why a supervised writing comparison is essential.</strong>
-    </div>
-  </div>
-
-  <!-- COMBINED STATS BANNER -->
+    <!-- COMBINED STATS BANNER -->
   <div style="background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(10,22,40,0.8)); border:1px solid rgba(192,57,43,0.3); border-radius:10px; padding:32px; margin-bottom:0;">
     <div class="section-label" style="margin-bottom:18px; font-size:11px;">Combined Amnesty Data — AP Language + Extended Essay</div>
     <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:16px; margin-bottom:24px;">
@@ -1315,8 +1357,8 @@
         <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Flagged students<br>who came forward</div>
       </div>
       <div style="text-align:center;">
-        <div style="font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:var(--green); line-height:1;">0</div>
-        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Students at 0% who<br>came forward</div>
+        <div style="font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:var(--green); line-height:1;">1</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Student at 0% who<br>came forward (no AI used)</div>
       </div>
       <div style="text-align:center;">
         <div style="font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:var(--gold); line-height:1;">77%</div>
@@ -1325,7 +1367,7 @@
     </div>
     <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:20px;">
       <p style="font-size:14px; color:var(--text-light); font-weight:400; line-height:1.8; text-align:center; max-width:700px; margin:0 auto;">
-        Across two separate studies, two different courses, two different cohorts — <strong style="color:var(--white)">the pattern is identical.</strong> Students who were flagged came forward. Students who were not flagged stayed silent. <strong style="color:var(--red-bright)">In both amnesty studies combined, not a single student who received 0% from Turnitin came forward to report AI use.</strong> This is not a coincidence. This is the tool working.
+        Across two separate studies, two different courses, two different cohorts — <strong style="color:var(--white)">the pattern holds.</strong> Students who were flagged came forward at high rates. Students who were not flagged overwhelmingly stayed silent. <strong style="color:var(--red-bright)">One student cleared at 0% did come forward — not to confess AI use, but to clear their name.</strong> No unflagged student came forward to report AI use they had not been caught for. The 6 flagged students who did not come forward remain unresolved: they may be refusing to admit use, or they may represent genuine false positives. That ambiguity is precisely why institutional follow-up matters.
       </p>
     </div>
   </div>
