@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Writing at ASD: What the Data Tells Us</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #112240;
+    --navy-light: #1a3a5c;
+    --red: #c0392b;
+    --red-bright: #e74c3c;
+    --amber: #e67e22;
+    --green: #27ae60;
+    --gold: #f39c12;
+    --cream: #f5f0e8;
+    --text-light: #ccd6f6;
+    --text-muted: #8892b0;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    color: var(--text-light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #060e1c 0%, #0a1628 50%, #0d1f3c 100%);
+    border-bottom: 3px solid var(--red);
+    padding: 70px 60px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(192,57,43,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--red-bright);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.1;
+    max-width: 700px;
+    margin-bottom: 20px;
+  }
+  .hero h1 span { color: var(--red-bright); }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 40px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+  }
+  .hero-meta span { color: var(--text-light); font-weight: 500; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 60px; }
+  .section { padding: 64px 60px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .section-alt { background: var(--navy-mid); }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red-bright);
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .section-intro {
+    color: var(--text-muted);
+    font-size: 14px;
+    max-width: 700px;
+    margin-bottom: 36px;
+    font-weight: 300;
+  }
+
+  /* ── STAT GRID ── */
+  .stat-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .stat-grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .stat-grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .stat-grid-2 { grid-template-columns: repeat(2, 1fr); }
+
+  .stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 28px 24px;
+    position: relative;
+  }
+  .stat-card.danger { border-color: rgba(192,57,43,0.4); background: rgba(192,57,43,0.06); }
+  .stat-card.warning { border-color: rgba(230,126,34,0.4); background: rgba(230,126,34,0.06); }
+  .stat-card.safe { border-color: rgba(39,174,96,0.4); background: rgba(39,174,96,0.06); }
+  .stat-card.gold { border-color: rgba(243,156,18,0.4); background: rgba(243,156,18,0.06); }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-num.red { color: var(--red-bright); }
+  .stat-num.amber { color: var(--amber); }
+  .stat-num.green { color: var(--green); }
+  .stat-num.white { color: var(--white); }
+  .stat-num.gold { color: var(--gold); }
+
+  .stat-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .stat-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  /* ── BAR CHART ── */
+  .bar-chart { margin-top: 8px; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .bar-name {
+    font-size: 12px;
+    color: var(--text-muted);
+    width: 160px;
+    flex-shrink: 0;
+    font-family: 'DM Mono', monospace;
+  }
+  .bar-track {
+    flex: 1;
+    height: 22px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+  }
+  .bar-fill span {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+    white-space: nowrap;
+  }
+  .bar-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-light);
+    width: 40px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ── FLOW DIAGRAM (Amnesty) ── */
+  .flow-wrap {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .flow-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .flow-box .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .flow-box .lbl { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .flow-arrow {
+    font-size: 22px;
+    color: var(--text-muted);
+    align-self: center;
+    flex-shrink: 0;
+  }
+
+  /* ── SANKEY-STYLE BREAKDOWN ── */
+  .sankey {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+  .sankey-left {
+    background: rgba(192,57,43,0.1);
+    border: 1px solid rgba(192,57,43,0.3);
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 28px 20px;
+    text-align: center;
+  }
+  .sankey-left .big { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 900; color: var(--red-bright); line-height: 1; }
+  .sankey-left .lbl { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .sankey-right {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-left: 3px solid var(--red-bright);
+    border-radius: 0 8px 8px 0;
+    overflow: hidden;
+  }
+  .sankey-item {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .sankey-item:last-child { border-bottom: none; }
+  .sankey-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .sankey-item-label { font-size: 13px; color: var(--text-light); flex: 1; }
+  .sankey-item-num { font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; }
+
+  /* ── COHORT TABLE ── */
+  .cohort-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .cohort-panel {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .cohort-header {
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .cohort-header.ee { background: rgba(192,57,43,0.15); color: var(--red-bright); }
+  .cohort-header.tok { background: rgba(230,126,34,0.15); color: var(--amber); }
+  .cohort-row {
+    display: flex;
+    align-items: center;
+    padding: 9px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    gap: 10px;
+    font-size: 12px;
+  }
+  .cohort-row:last-child { border-bottom: none; }
+  .cohort-name { flex: 1; color: var(--text-light); }
+  .cohort-sim { font-family: 'DM Mono', monospace; color: var(--text-muted); width: 40px; text-align: right; font-size: 11px; }
+  .cohort-ai { font-family: 'DM Mono', monospace; font-weight: 600; width: 50px; text-align: right; font-size: 12px; }
+  .ai-high { color: var(--red-bright); }
+  .ai-mid { color: var(--amber); }
+  .ai-low { color: var(--green); }
+  .ai-zero { color: var(--text-muted); }
+  .ai-inc { color: var(--text-muted); font-style: italic; }
+  .cohort-summary {
+    padding: 14px 20px;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .cohort-summary strong { color: var(--text-light); }
+
+  /* ── ACCURACY METER ── */
+  .accuracy-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .accuracy-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 24px 20px;
+    text-align: center;
+  }
+  .accuracy-circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 900;
+    border: 3px solid;
+  }
+  .accuracy-card h4 { font-size: 13px; font-weight: 600; color: var(--text-light); margin-bottom: 6px; }
+  .accuracy-card p { font-size: 11px; color: var(--text-muted); font-weight: 300; }
+
+  /* ── INCEPTION BOX ── */
+  .inception-box {
+    background: linear-gradient(135deg, rgba(243,156,18,0.08), rgba(192,57,43,0.08));
+    border: 1px solid rgba(243,156,18,0.3);
+    border-left: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 24px;
+    align-items: center;
+  }
+  .inception-icon {
+    font-size: 48px;
+    line-height: 1;
+  }
+  .inception-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .inception-box p { font-size: 14px; color: var(--text-muted); font-weight: 300; line-height: 1.7; }
+  .inception-box p strong { color: var(--text-light); }
+
+  /* ── POLICY SECTION ── */
+  .policy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .policy-card {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .policy-head {
+    padding: 14px 20px;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .policy-head.classroom { background: rgba(192,57,43,0.2); color: var(--red-bright); }
+  .policy-head.ib { background: rgba(230,126,34,0.2); color: var(--amber); }
+  .policy-head.ap { background: rgba(39,174,96,0.2); color: #2ecc71; }
+  .policy-head.panel { background: rgba(52,152,219,0.2); color: #3498db; }
+  .policy-body {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-top: none;
+    padding: 16px 20px;
+    border-radius: 0 0 8px 8px;
+  }
+  .policy-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .policy-item:last-child { margin-bottom: 0; }
+  .policy-item::before {
+    content: '→';
+    color: var(--red-bright);
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  /* ── PROBLEM BOX ── */
+  .problem-box {
+    background: rgba(192,57,43,0.07);
+    border: 1px solid rgba(192,57,43,0.25);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+  }
+  .problem-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--red-bright);
+    margin-bottom: 12px;
+  }
+  .problem-box p { font-size: 14px; color: var(--text-muted); font-weight: 300; line-height: 1.7; }
+  .problem-box p strong { color: var(--text-light); }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: linear-gradient(135deg, var(--red) 0%, #8b1a1a 100%);
+    padding: 60px;
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .cta-section p { color: rgba(255,255,255,0.75); font-size: 16px; max-width: 600px; margin: 0 auto 32px; font-weight: 300; }
+  .cta-asks {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .cta-ask {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 6px;
+    padding: 14px 24px;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(192,57,43,0.5), transparent); margin: 0 60px; }
+
+  /* ── VALIDATION GRID ── */
+  .validation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .val-card {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .val-head {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .val-head.green-h { background: rgba(39,174,96,0.15); color: #2ecc71; }
+  .val-head.red-h { background: rgba(192,57,43,0.15); color: var(--red-bright); }
+  .val-head.blue-h { background: rgba(52,152,219,0.15); color: #5dade2; }
+  .val-body { padding: 16px; background: rgba(0,0,0,0.2); }
+  .val-result {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 12px;
+  }
+  .val-result:last-child { border-bottom: none; }
+  .val-result .name { color: var(--text-muted); }
+  .val-result .pct { font-family: 'DM Mono', monospace; font-weight: 600; }
+
+  /* ── FOOTNOTE ── */
+  .footnote {
+    background: rgba(0,0,0,0.3);
+    padding: 24px 60px;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  @media print {
+    body { font-size: 12px; }
+    .hero h1 { font-size: 38px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="section-label">American School of Dhahran · Academic Integrity Report · 2025–2026</div>
+  <h1>AI Writing at ASD:<br><span>What the Data Tells Us</span></h1>
+  <p class="hero-sub">A data-driven case for institutional action — covering AP Language, IB Extended Essay, TOK Essays, and Turnitin's demonstrated reliability as a detection tool.</p>
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;">
+    <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:7px 16px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text-light); letter-spacing:1px;">Prepared by: Michael Smith</div>
+    <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:7px 16px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text-light); letter-spacing:1px;">February 2026</div>
+    <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:4px; padding:7px 16px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text-light); letter-spacing:1px;">American School of Dhahran</div>
+  </div>
+</div>
+
+<!-- EXECUTIVE SUMMARY -->
+<div style="background:var(--navy-mid); border-bottom:1px solid rgba(255,255,255,0.06); padding:48px 60px;">
+  <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start;">
+
+    <div>
+      <div class="section-label" style="margin-bottom:12px;">Executive Summary</div>
+      <p style="font-size:15px; color:var(--text-light); font-weight:400; line-height:1.8; margin-bottom:14px;">
+        This report presents data collected across multiple studies conducted at ASD between 2023 and 2026. The evidence shows that <strong style="color:var(--white);">AI use in student academic writing is widespread, increasing, and going unaddressed</strong> — not because we lack a detection tool, but because we lack institutional consequences.
+      </p>
+      <p style="font-size:14px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:14px;">
+        Turnitin, which ASD already licenses, has been validated both by independent research and by our own internal testing as a reliable detector of AI-generated writing at the 20% threshold and above. Two separate amnesty studies — one in AP Language, one for IB Extended Essays — produced near-identical results: flagged students came forward, unflagged students did not, and confession rates among flagged students exceeded 75% in both cases.
+      </p>
+      <p style="font-size:14px; color:var(--text-muted); font-weight:300; line-height:1.8;">
+        Despite this, our current response — accepting Google Docs revision history as sufficient proof of authorship — is easily circumvented and sends a clear message to students: there are no real consequences. The data from IB Cohort 14 shows the result: a 63% increase in flagging rates between September 2025 and January 2026, with no policy change in between.
+      </p>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <div class="section-label" style="margin-bottom:4px;">This Report Contains</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+          <div style="background:var(--red-bright); color:white; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:1px;">01</div>
+          <span>Third-party and Turnitin's own research on AI detection accuracy</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+          <div style="background:var(--red-bright); color:white; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:1px;">02</div>
+          <span>An internal validation study using my own authenticated academic writing</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+          <div style="background:var(--red-bright); color:white; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:1px;">03</div>
+          <span>AP Language amnesty study results (57 papers, 18 flagged)</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+          <div style="background:var(--red-bright); color:white; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:1px;">04</div>
+          <span>IB Extended Essay amnesty results including under-reporting findings</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+          <div style="background:var(--red-bright); color:white; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:1px;">05</div>
+          <span>The "Inception Effect" — AI influence students don't recognize in their own writing</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+          <div style="background:var(--red-bright); color:white; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:1px;">06</div>
+          <span>IB Cohort 14 full data: EEs and TOK essays (68 submissions)</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+          <div style="background:var(--red-bright); color:white; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:1px;">07</div>
+          <span>A documented 63% increase in flagging rates over four months</span>
+        </div>
+        <div style="display:flex; gap:12px; align-items:flex-start; font-size:13px; color:var(--text-muted);">
+          <div style="background:var(--red-bright); color:white; font-family:'DM Mono',monospace; font-size:10px; font-weight:600; padding:3px 8px; border-radius:3px; flex-shrink:0; margin-top:1px;">08</div>
+          <span>Specific policy recommendations including a supervised writing protocol</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOSSARY -->
+  <div style="max-width:1100px; margin:36px auto 0; background:rgba(0,0,0,0.2); border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:22px 28px;">
+    <div class="section-label" style="margin-bottom:14px;">Key Terms & Context</div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+      <div>
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:4px;">Extended Essay (EE)</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.6;">A 4,000-word independent research essay required of all IB Diploma students. Externally assessed by the IB and counts toward the student's diploma score. Students work with a supervisor over roughly 18 months.</div>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:4px;">TOK Essay (Theory of Knowledge)</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.6;">A 1,600-word philosophical essay submitted externally to the IB. Students choose from six prescribed titles and must engage with knowledge questions across disciplines. Also counts toward the IB diploma.</div>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:4px;">Turnitin's 20% Threshold</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.6;">Turnitin intentionally suppresses AI scores below 20%, showing "*%" instead of a number. This is by design — to protect students from borderline false positives. Any score of 20% or above represents Turnitin at its most confident, with a false positive rate under 1%.</div>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:4px;">AP Language / AP Research</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.6;">College Board Advanced Placement courses. AP Language focuses on rhetoric and composition. AP Research requires a 4,000–5,000 word academic paper and oral defense. Both involve substantial writing assessed against authentic authorship standards.</div>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:4px;">Amnesty Study</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.6;">After running submissions through Turnitin, flagged students were offered amnesty — the chance to come forward voluntarily with no academic penalty. This created a natural test of the tool: if Turnitin is accurate, guilty students should self-report; innocent ones should not feel compelled to.</div>
+      </div>
+      <div>
+        <div style="font-size:12px; font-weight:600; color:var(--text-light); margin-bottom:4px;">Inconclusive (*%)</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.6;">When Turnitin detects some AI signal but below 20%, it returns "*%" rather than a number. These students are not cleared — they occupy an uncertain zone that likely represents partial or subtle AI involvement and should not be treated as confirmed authentic writing.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+
+<div class="section">
+  <div class="section-label">Section 01 — Research & Validation</div>
+  <div class="section-title">Turnitin Is a Reliable Tool — The Research Confirms It</div>
+  <p class="section-intro">Before examining our student data, it's essential to establish what the research says about Turnitin's AI detection capabilities — both from Turnitin itself and from independent academic studies.</p>
+
+  <div class="accuracy-grid" style="margin-bottom: 28px;">
+    <div class="accuracy-card">
+      <div class="accuracy-circle" style="border-color: var(--green); color: var(--green);">93%</div>
+      <h4>Human Writing Cleared Correctly</h4>
+      <p>Temple University study: 93% of fully human-written texts correctly identified as human (false positive rate under 7%)</p>
+    </div>
+    <div class="accuracy-card">
+      <div class="accuracy-circle" style="border-color: var(--red-bright); color: var(--red-bright);">85%</div>
+      <h4>AI Writing Detected</h4>
+      <p>Turnitin's own CPO: "We find about 85% of AI writing" — deliberately letting 15% through to protect innocent students from false accusation</p>
+    </div>
+    <div class="accuracy-card">
+      <div class="accuracy-circle" style="border-color: var(--amber); color: var(--amber);">&lt;1%</div>
+      <h4>False Positive Rate at 20%+</h4>
+      <p>Validated across 800,000 pre-ChatGPT documents. For submissions flagged above the 20% threshold, false positives are less than 1%</p>
+    </div>
+  </div>
+
+  <!-- META-ANALYSIS SECTION -->
+  <div style="margin-bottom:28px;">
+    <div class="section-label" style="margin-bottom:10px;">The Right Question: Not "Does It Catch Everything?" — But "When It Flags, Is It Right?"</div>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:20px;">
+      Much of the criticism of AI detection tools focuses on what they <em>miss</em> — AI-assisted writing that slips through undetected. That is a real limitation. But it is the wrong question when evaluating whether our flagged students actually used AI. The question that matters for our data is a different one: <strong style="color:var(--text-light);">when Turnitin fires a flag above 20%, how likely is it to be correct?</strong> This is the statistical concept of <em>precision</em> — not how much AI the tool catches, but how trustworthy it is when it says AI is present. The research on this question is unambiguous.
+    </p>
+
+    <!-- THE CORE FINDING: BIG CALLOUT -->
+    <div style="background:linear-gradient(135deg, rgba(39,174,96,0.12), rgba(10,22,40,0.9)); border:1px solid rgba(39,174,96,0.35); border-radius:10px; padding:32px; margin-bottom:28px; display:grid; grid-template-columns:auto 1fr; gap:32px; align-items:center;">
+      <div style="text-align:center;">
+        <div style="font-family:'Playfair Display',serif; font-size:80px; font-weight:900; color:var(--green); line-height:1;">&lt;1%</div>
+        <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; margin-top:4px;">Document False Positive Rate</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">at 20%+ threshold</div>
+      </div>
+      <div>
+        <div style="font-family:'Playfair Display',serif; font-size:19px; color:var(--white); font-weight:700; margin-bottom:12px; line-height:1.4;">When Turnitin flags a document above 20%, the probability that it is flagging an innocent student is less than 1 in 100.</div>
+        <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:10px;">
+          This figure comes directly from Turnitin's Chief Product Officer and is independently validated against 800,000 academic papers written before ChatGPT existed — a dataset large enough to treat as a reliable ground truth. The 20% threshold is not arbitrary: it is precisely the point at which Turnitin's own testing showed false positive rates dropping below 1%. Below 20%, the tool shows *% and withholds judgment. At 20% and above, it is at its most confident.
+        </p>
+        <p style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.7; border-top:1px solid rgba(255,255,255,0.07); padding-top:12px; margin-top:4px;">
+          Source: Turnitin CPO Annie Chechitelli, official blog post (2023), subsequently validated in Turnitin AIW-2 White Paper (August 2024). Weber-Wulff et al. (2023, <em>International Journal for Educational Integrity</em>) found zero false accusations in independent testing of Turnitin. This figure refers to document-level precision — the reliability of the flag itself.
+        </p>
+      </div>
+    </div>
+
+    <!-- PRECISION vs RECALL EXPLAINER -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:24px 28px; margin-bottom:28px;">
+      <div class="section-label" style="margin-bottom:12px;">Two Different Questions — Only One Matters for Our Students</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+        <div style="background:rgba(192,57,43,0.07); border:1px solid rgba(192,57,43,0.2); border-radius:8px; padding:18px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:8px;">Question A — Recall</div>
+          <div style="font-size:15px; color:var(--text-light); font-weight:600; margin-bottom:10px; line-height:1.4;">"Does Turnitin catch all AI writing?"</div>
+          <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.7; margin-bottom:10px;">Answer: No. The tool intentionally misses approximately 15% of AI-written content to keep false positives low. Heavily edited or paraphrased AI text is harder to detect. Accuracy on hybrid/mixed-authorship documents ranges from 20–63%.</div>
+          <div style="background:rgba(192,57,43,0.1); border-radius:4px; padding:8px 12px; font-size:11px; color:var(--red-bright);">This is the question critics focus on. It is NOT the question relevant to determining whether our flagged students used AI.</div>
+        </div>
+        <div style="background:rgba(39,174,96,0.07); border:1px solid rgba(39,174,96,0.2); border-radius:8px; padding:18px;">
+          <div style="font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); margin-bottom:8px;">Question B — Precision</div>
+          <div style="font-size:15px; color:var(--text-light); font-weight:600; margin-bottom:10px; line-height:1.4;">"When Turnitin flags a student, is it right?"</div>
+          <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.7; margin-bottom:10px;">Answer: Yes, with &lt;1% error at the document level above 20%. The flag is highly reliable. A student at 35%, 48%, or 61% AI is almost certainly not a false positive. The tool errs toward missing AI, not toward falsely accusing students.</div>
+          <div style="background:rgba(39,174,96,0.1); border-radius:4px; padding:8px 12px; font-size:11px; color:var(--green);">This is the question that matters for our academic integrity decisions. The answer is strongly in favor of the tool's trustworthiness.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERNAL vs EXTERNAL COMPARISON TABLE -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; overflow:hidden; margin-bottom:28px;">
+      <div style="background:rgba(0,0,0,0.2); padding:18px 24px; border-bottom:1px solid rgba(255,255,255,0.07);">
+        <div class="section-label" style="margin-bottom:4px;">Internal Research vs. External Research: A Comparison</div>
+        <div style="font-size:13px; color:var(--text-muted); font-weight:300;">How does our school-level data align with what peer-reviewed research tells us about Turnitin's flag precision? Remarkably closely.</div>
+      </div>
+      <table style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
+            <th style="text-align:left; padding:14px 20px; color:var(--text-muted); font-weight:400; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; width:28%;">Metric</th>
+            <th style="text-align:center; padding:14px 20px; color:#5dade2; font-weight:600; width:36%;">External Research</th>
+            <th style="text-align:center; padding:14px 20px; color:var(--gold); font-weight:600; width:36%;">Our Internal Studies</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">False positive rate (flag above 20% on fully human writing)</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--green); font-family:'Playfair Display',serif; font-size:20px; font-weight:900;">&lt;1%</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--green); font-family:'Playfair Display',serif; font-size:20px; font-weight:900;">0%</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.02);">
+            <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Evidence basis</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">800,000 pre-ChatGPT academic documents; zero false accusations in Weber-Wulff et al. (2023) independent testing</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">91 papers across two amnesty studies — not one flagged student came forward claiming innocence</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Accuracy on fully human-written text (cleared correctly)</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--green); font-family:'Playfair Display',serif; font-size:20px; font-weight:900;">93%</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--green); font-family:'Playfair Display',serif; font-size:20px; font-weight:900;">100%</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.02);">
+            <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Evidence basis</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">Temple University evaluation of AI detection tools (independent)</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">6 of 6 authenticated personal documents (master's papers + TOK model essay) returned 0% AI</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Pre-AI student baseline accuracy</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">No direct comparable study at K–12 level</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--green); font-family:'Playfair Display',serif; font-size:20px; font-weight:900;">89%</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(255,255,255,0.02);">
+            <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Evidence basis</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">—</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">8 of 9 AP Research papers from April 2023 returned 0%; 1 inconclusive (*%) — consistent with Turnitin's own conservative threshold behavior</td>
+          </tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+            <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Confirmed AI detection in known AI-written document</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--red-bright); font-family:'Playfair Display',serif; font-size:20px; font-weight:900;">85–91%</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--red-bright); font-family:'Playfair Display',serif; font-size:20px; font-weight:900;">100%</td>
+          </tr>
+          <tr style="background:rgba(255,255,255,0.02);">
+            <td style="padding:14px 20px; color:var(--text-muted); font-weight:400; line-height:1.5;">Evidence basis</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">Turnitin AIW-2 White Paper (2024); CPO public statement on intentional 85% recall</td>
+            <td style="padding:14px 20px; text-align:center; color:var(--text-muted); font-size:11px; line-height:1.6;">1 TOK essay written paragraph-by-paragraph with ChatGPT returned 100% AI — caught using the same iterative method students actually use</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- BOTTOM LINE -->
+    <div style="background:linear-gradient(135deg, rgba(39,174,96,0.1), rgba(10,22,40,0.9)); border:1px solid rgba(39,174,96,0.25); border-radius:8px; padding:22px 28px;">
+      <div class="section-label" style="color:var(--green); margin-bottom:10px;">Bottom Line for Our IB and AP Data</div>
+      <p style="font-size:14px; color:var(--text-light); font-weight:400; line-height:1.8; margin-bottom:10px;">
+        Our internal results track external research closely — and in every category, our observed results are at least as good as the peer-reviewed benchmark. This is not a coincidence. It confirms that Turnitin is behaving at ASD exactly as it behaves in controlled academic studies.
+      </p>
+      <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8;">
+        When we see a Cohort 14 student returning 40%, 60%, or 89% AI on their Extended Essay or TOK essay, the research gives us high confidence that the flag is accurate. The question is no longer <em>"is this real?"</em> — the question is <em>"what are we going to do about it?"</em>
+      </p>
+    </div>
+  </div>
+
+  <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 20px 24px;">
+    <div class="section-label" style="margin-bottom: 12px;">What Turnitin Detects (and How It's Evolving)</div>
+    <p style="font-size: 13px; color: var(--text-muted); font-weight: 300; line-height: 1.7;">The 20% threshold is not arbitrary. <strong style="color:var(--text-light)">Turnitin deliberately suppresses scores below 20%</strong> — showing *% instead — to protect students from borderline false positives. A flag of 20% or above represents Turnitin at its most confident. As of late 2025, Turnitin now runs three models simultaneously: the core AI writing detector, a paraphrase/text-spinner detector, and a newly added AI bypasser/humanizer detector. This means students who process AI text through tools like QuillBot or dedicated "humanizer" applications are increasingly detectable — the evasion gap is narrowing.</p>
+  </div>
+</div>
+
+
+
+<div class="divider"></div>
+
+<!-- SECTION 2: OUR VALIDATION -->
+<div class="section section-alt">
+  <div class="section-label">Section 02 — Internal Validation Study</div>
+  <div class="section-title">We Tested It Ourselves. The Results Are Unambiguous.</div>
+  <p class="section-intro">Before drawing conclusions from student data, I conducted a personal validation study to test Turnitin's reliability firsthand. The goal was simple: submit documents with known authorship — some entirely my own, one entirely AI-generated — and observe what Turnitin returned.</p>
+
+  <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-left:3px solid #5dade2; border-radius:8px; padding:20px 24px; margin-bottom:24px;">
+    <div class="section-label" style="margin-bottom:10px; color:#5dade2;">Methodology</div>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:12px;">
+      <strong style="color:var(--text-light);">Group 1 — Authentic Academic Writing (6 documents):</strong> I uploaded papers I wrote during my master's degree — a mix of research papers and reflective teaching essays written before AI writing tools existed. These represent a range of academic genres: formal research argumentation, literature review, and personal pedagogical reflection. I also included a TOK essay I wrote myself as a model for students, with no AI involvement. All were written entirely by me, with no AI assistance of any kind.
+    </p>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:12px;">
+      <strong style="color:var(--text-light);">Group 2 — Pre-AI Student Writing (9 documents):</strong> The 2023 AP Research cohort submitted their papers in April 2023 — just months after ChatGPT's public release, when access was still limited and its use in student writing was minimal. These papers were used as a second baseline: authentic student writing from a period before AI was embedded in academic workflows.
+    </p>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8;">
+      <strong style="color:var(--text-light);">Group 3 — AI-Generated Writing (1 document):</strong> I wrote a TOK essay using ChatGPT, deliberately mimicking how students use it — not in a single prompt, but paragraph by paragraph, re-prompting the AI to incorporate new ideas, sharpen arguments, and improve transitions. This mirrors real-world student AI use. The final document was submitted to Turnitin to see if this method of AI use would be detected.
+    </p>
+  </div>
+
+  <div class="validation-grid">
+    <div class="val-card">
+      <div class="val-head green-h">✓ Authentic Writing — All Cleared</div>
+      <div class="val-body">
+        <div class="val-result"><span class="name">Master's Research Paper 1</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Master's Research Paper 2</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Master's Research Paper 3</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Master's Reflection Paper 1</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Master's Reflection Paper 2</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">TOK Essay (Student Example)</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div style="margin-top:10px; font-size:11px; color:var(--text-muted);">6/6 authentic documents correctly cleared. Zero false positives.</div>
+      </div>
+    </div>
+    <div class="val-card">
+      <div class="val-head red-h">✗ AI-Written Document — Correctly Caught</div>
+      <div class="val-body">
+        <div class="val-result"><span class="name">TOK Essay (AI-Written)</span><span class="pct" style="color:var(--red-bright)">100%</span></div>
+        <div style="margin-top:12px; font-size:12px; color:var(--text-muted); line-height:1.6;">
+          Written paragraph-by-paragraph using ChatGPT, with re-prompting to incorporate new ideas and tighten reasoning — <strong style="color:var(--text-light)">mimicking how students actually use AI</strong>. Turnitin returned 100% AI. No ambiguity.
+        </div>
+      </div>
+    </div>
+    <div class="val-card">
+      <div class="val-head blue-h">2023 AP Research — Pre-AI Baseline</div>
+      <div class="val-body">
+        <div class="val-result"><span class="name">Student 01</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Student 02</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Student 03</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Student 04</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Student 05</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Student 06</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Student 07</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Student 08</span><span class="pct" style="color:var(--green)">0%</span></div>
+        <div class="val-result"><span class="name">Student 09</span><span class="pct ai-inc">*%</span></div>
+        <div style="margin-top:10px; font-size:11px; color:var(--text-muted);">8 of 9 returned 0% AI in papers written when ChatGPT was barely accessible. The one inconclusive (*%) result reflects Turnitin's conservative threshold, not a false positive.</div>
+      </div>
+    </div>
+  </div>
+  <!-- CHARTS ROW -->
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-top:28px;">
+
+    <!-- CHART 1: Authentic vs AI Bar Chart -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:24px;">
+      <div class="section-label" style="margin-bottom:4px;">Validation Study Results</div>
+      <div style="font-family:'Playfair Display',serif; font-size:18px; color:var(--white); margin-bottom:20px;">Authentic vs. AI-Written: Detection Accuracy</div>
+
+      <!-- Authentic papers -->
+      <div style="margin-bottom:18px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Authentic Documents (6 papers + 9 pre-AI baseline)</div>
+        <div class="bar-row">
+          <div class="bar-name">Master's Papers</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);">
+              <span>5 of 5 → 0% AI ✓</span>
+            </div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">TOK Example Essay</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);">
+              <span>1 of 1 → 0% AI ✓</span>
+            </div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">2023 AP Research</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:89%; background:linear-gradient(90deg,#27ae60,#2ecc71);">
+              <span>8 of 9 → 0% AI ✓</span>
+            </div>
+          </div>
+          <div class="bar-pct" style="color:var(--green)">89%</div>
+        </div>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:16px; margin-bottom:8px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">AI-Written Document (1 paper)</div>
+        <div class="bar-row">
+          <div class="bar-name">AI-Written TOK Essay</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#c0392b,#e74c3c);">
+              <span>Returned 100% AI ✗</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; background:rgba(39,174,96,0.08); border-left:3px solid var(--green); border-radius:4px; padding:10px 14px; font-size:12px; color:var(--text-muted);">
+        <strong style="color:var(--green);">Result:</strong> 15 of 16 authentic documents correctly cleared. 1 AI document correctly flagged at 100%. Zero false positives above the 20% threshold.
+      </div>
+    </div>
+
+    <!-- CHART 2: EE + TOK Cohort Pie-style breakdown -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:24px;">
+      <div class="section-label" style="margin-bottom:4px;">Cohort 14 — IB Assessments</div>
+      <div style="font-family:'Playfair Display',serif; font-size:18px; color:var(--white); margin-bottom:20px;">AI Detection Results Across 68 IB Submissions</div>
+
+      <div style="display:flex; gap:20px; align-items:center; margin-bottom:24px;">
+        <!-- SVG donut chart -->
+        <svg width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0;">
+          <!-- Total: 68 submissions. Flagged >20%: 21 (31%). Inconclusive *%: 20 (29%). Clean 0%: 27 (40%) -->
+          <!-- Circle segments using stroke-dasharray on r=50 circle, circumference=314 -->
+          <circle cx="70" cy="70" r="50" fill="none" stroke="#1a3a5c" stroke-width="22"/>
+          <!-- Clean 0%: 40% = 125.6 of 314 -->
+          <circle cx="70" cy="70" r="50" fill="none" stroke="#27ae60" stroke-width="22"
+            stroke-dasharray="125.6 314" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+          <!-- Inconclusive: 29% = 91.1 -->
+          <circle cx="70" cy="70" r="50" fill="none" stroke="#e67e22" stroke-width="22"
+            stroke-dasharray="91.1 314" stroke-dashoffset="-125.6" transform="rotate(-90 70 70)"/>
+          <!-- Flagged >20%: 31% = 97.3 -->
+          <circle cx="70" cy="70" r="50" fill="none" stroke="#e74c3c" stroke-width="22"
+            stroke-dasharray="97.3 314" stroke-dashoffset="-216.7" transform="rotate(-90 70 70)"/>
+          <text x="70" y="65" text-anchor="middle" fill="white" font-family="Playfair Display" font-size="20" font-weight="900">68</text>
+          <text x="70" y="82" text-anchor="middle" fill="#8892b0" font-family="DM Sans" font-size="10">submissions</text>
+        </svg>
+
+        <div style="display:flex; flex-direction:column; gap:12px; flex:1;">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:12px;height:12px;border-radius:2px;background:#e74c3c;flex-shrink:0;"></div>
+                <span style="font-size:12px; color:var(--text-light);">Flagged above 20% AI</span>
+              </div>
+              <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--red-bright); font-weight:600;">21 <span style="font-size:10px; color:var(--text-muted);">31%</span></span>
+            </div>
+            <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+              <div style="width:31%; height:100%; background:#e74c3c; border-radius:3px;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:12px;height:12px;border-radius:2px;background:#e67e22;flex-shrink:0;"></div>
+                <span style="font-size:12px; color:var(--text-light);">Inconclusive (*%)</span>
+              </div>
+              <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--amber); font-weight:600;">20 <span style="font-size:10px; color:var(--text-muted);">29%</span></span>
+            </div>
+            <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+              <div style="width:29%; height:100%; background:#e67e22; border-radius:3px;"></div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:12px;height:12px;border-radius:2px;background:#27ae60;flex-shrink:0;"></div>
+                <span style="font-size:12px; color:var(--text-light);">Cleared at 0% AI</span>
+              </div>
+              <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--green); font-weight:600;">27 <span style="font-size:10px; color:var(--text-muted);">40%</span></span>
+            </div>
+            <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+              <div style="width:40%; height:100%; background:#27ae60; border-radius:3px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EE vs TOK split -->
+      <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:16px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">EE vs. TOK — Flagged Above 20%</div>
+        <div class="bar-row">
+          <div class="bar-name">Extended Essays</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:23.5%; background:linear-gradient(90deg,#c0392b,#e74c3c);">
+            </div>
+          </div>
+          <div class="bar-pct" style="color:var(--red-bright);">8/34</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">TOK Essays</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:38.2%; background:linear-gradient(90deg,#c0392b,#e74c3c);">
+            </div>
+          </div>
+          <div class="bar-pct" style="color:var(--red-bright);">13/34</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px; background:rgba(192,57,43,0.08); border-left:3px solid var(--red-bright); border-radius:4px; padding:10px 14px; font-size:12px; color:var(--text-muted);">
+        <strong style="color:var(--red-bright);">60% of the cohort</strong> produced either a flagged or inconclusive result on at least one IB assessment. Only 40% were fully cleared.
+      </div>
+    </div>
+  </div>
+
+
+
+<div class="section">
+  <div class="section-label">Section 03 — AP Language Study</div>
+  <div class="section-title">The Amnesty Study: Turnitin Flagged the Right Students</div>
+  <p class="section-intro">57 AP Language papers were submitted. 18 were flagged above Turnitin's 20% AI-detection threshold. Students were offered amnesty — no consequences — if they came forward voluntarily.</p>
+
+  <div class="flow-wrap" style="margin-bottom: 32px;">
+    <div class="flow-box">
+      <div class="num" style="color:var(--white)">57</div>
+      <div class="lbl">Total papers submitted</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:rgba(192,57,43,0.4); background:rgba(192,57,43,0.06);">
+      <div class="num" style="color:var(--red-bright)">18</div>
+      <div class="lbl">Flagged above 20% AI</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:rgba(52,152,219,0.4); background:rgba(52,152,219,0.06);">
+      <div class="num" style="color:#5dade2">16</div>
+      <div class="lbl">Total students came forward</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box" style="border-color:rgba(192,57,43,0.4); background:rgba(192,57,43,0.06);">
+      <div class="num" style="color:var(--red-bright)">4</div>
+      <div class="lbl">Flagged — did not come forward</div>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+    <div>
+      <div class="section-label" style="margin-bottom:16px;">Breakdown of 16 Who Came Forward</div>
+      <div class="sankey">
+        <div class="sankey-left">
+          <div class="big">16</div>
+          <div class="lbl">Students who<br>self-reported</div>
+        </div>
+        <div class="sankey-right">
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--red-bright)"></div>
+            <div class="sankey-item-label">Flagged above 20% AND came forward</div>
+            <div class="sankey-item-num" style="color:var(--red-bright)">14</div>
+          </div>
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--amber)"></div>
+            <div class="sankey-item-label">Not flagged — came forward (sub-20% AI use)</div>
+            <div class="sankey-item-num" style="color:var(--amber)">1</div>
+          </div>
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--text-muted)"></div>
+            <div class="sankey-item-label">Not flagged — came forward (no AI used / false alarm)</div>
+            <div class="sankey-item-num" style="color:var(--text-muted)">1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom:16px;">What This Tells Us</div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div class="stat-card danger">
+          <div class="stat-num red" style="font-size:32px;">78%</div>
+          <div class="stat-label">Confession Rate Among Flagged Students</div>
+          <div class="stat-desc">14 of 18 flagged students self-reported. The amnesty exposed the guilty — not the innocent.</div>
+        </div>
+        <div class="stat-card safe">
+          <div class="stat-num green" style="font-size:32px;">1</div>
+          <div class="stat-label">Confirmed False Positive</div>
+          <div class="stat-desc">Only 1 student came forward who genuinely had not used AI — and they were not flagged above 20%.</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-num amber" style="font-size:32px;">4</div>
+          <div class="stat-label">Flagged — No Response</div>
+          <div class="stat-desc">4 flagged students never came forward. These cases require institutional follow-up.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:20px 24px;">
+    <div class="section-label" style="margin-bottom:10px;">The Critical Takeaway</div>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7;">When students were given a penalty-free opportunity to come forward, <strong style="color:var(--text-light)">the vast majority of confessions came from Turnitin's flagged group</strong>. The tool did not cast a wide net and scoop up innocent students — it precisely identified the students who had used AI. This is not a coincidence. This is validation.</p>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- AMNESTY CHART -->
+<div class="section">
+  <div class="section-label">Combined Amnesty Data — AP Language + Extended Essay</div>
+  <div class="section-title">Every Student. One Chart.</div>
+  <p class="section-intro">Each circle below represents one student across both amnesty studies (91 total). The pattern speaks for itself.</p>
+
+  <div style="display:grid; grid-template-columns: 1fr auto 1fr; gap:0; align-items:stretch; max-width:900px; margin:0 auto 32px;">
+
+    <!-- CAME FORWARD COLUMN -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-right:none; border-radius:10px 0 0 10px; padding:28px 24px;">
+      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#5dade2; margin-bottom:6px;">Came Forward</div>
+      <div style="font-family:'Playfair Display',serif; font-size:36px; font-weight:900; color:var(--white); margin-bottom:20px;">22 <span style="font-size:16px; color:var(--text-muted); font-family:'DM Sans',sans-serif; font-weight:300;">students</span></div>
+
+      <!-- dot grid -->
+      <div style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px;">
+        <!-- 20 flagged who came forward = red dots -->
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/><title>Flagged &gt;20% — Came Forward (AP Language)</title></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <!-- 1 sub-20% AI user who came forward = amber -->
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e67e22" opacity="0.9"/><title>Below 20% — AI Used — Came Forward</title></svg>
+        <!-- 1 student at 0%, no AI, false alarm = gray outline -->
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="8" fill="none" stroke="#8892b0" stroke-width="2"/><title>0% AI — No AI Used — Came Forward</title></svg>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted);">
+          <svg width="14" height="14"><circle cx="7" cy="7" r="6" fill="#e74c3c"/></svg>
+          <span><strong style="color:var(--text-light)">20 students</strong> — flagged above 20%, came forward</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted);">
+          <svg width="14" height="14"><circle cx="7" cy="7" r="6" fill="#e67e22"/></svg>
+          <span><strong style="color:var(--text-light)">1 student</strong> — sub-20% AI use, came forward</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted);">
+          <svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="none" stroke="#8892b0" stroke-width="2"/></svg>
+          <span><strong style="color:var(--text-light)">1 student</strong> — 0% AI, no AI used, false alarm</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER DIVIDER -->
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 20px; background:rgba(0,0,0,0.2); border-top:1px solid rgba(255,255,255,0.08); border-bottom:1px solid rgba(255,255,255,0.08);">
+      <div style="font-family:'Playfair Display',serif; font-size:28px; color:var(--red-bright); font-weight:900; writing-mode:vertical-rl; text-orientation:mixed; letter-spacing:2px;">vs</div>
+    </div>
+
+    <!-- DID NOT COME FORWARD COLUMN -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-left:none; border-radius:0 10px 10px 0; padding:28px 24px;">
+      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">Did Not Come Forward</div>
+      <div style="font-family:'Playfair Display',serif; font-size:36px; font-weight:900; color:var(--white); margin-bottom:20px;">49 <span style="font-size:16px; color:var(--text-muted); font-family:'DM Sans',sans-serif; font-weight:300;">students</span></div>
+
+      <div style="display:flex; flex-wrap:wrap; gap:7px; margin-bottom:20px;">
+        <!-- 6 flagged who did NOT come forward = red dots -->
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/><title>Flagged &gt;20% — Did NOT Come Forward</title></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="#e74c3c" opacity="0.9"/></svg>
+        <!-- 43 students at 0% who stayed silent = small gray dots -->
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/><title>0% AI — Did Not Come Forward</title></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+        <svg width="22" height="22" viewBox="0 0 22 22"><circle cx="11" cy="11" r="6" fill="#2a3f5a"/></svg>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted);">
+          <svg width="14" height="14"><circle cx="7" cy="7" r="6" fill="#e74c3c"/></svg>
+          <span><strong style="color:var(--text-light)">6 students</strong> — flagged above 20%, stayed silent</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text-muted);">
+          <svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="#2a3f5a"/></svg>
+          <span><strong style="color:var(--text-light)">43 students</strong> — cleared at 0% AI, stayed silent — nothing to report</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE HEADLINE FINDING -->
+  <div style="background:linear-gradient(135deg, rgba(192,57,43,0.15), rgba(10,22,40,0.9)); border:1px solid rgba(192,57,43,0.35); border-radius:10px; padding:28px 36px; text-align:center; max-width:900px; margin:0 auto;">
+      <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--white); font-weight:700; margin-bottom:12px; line-height:1.4;">
+        The students who came forward were <span style="color:var(--red-bright);">overwhelmingly the ones Turnitin flagged.</span> The students Turnitin cleared stayed silent.
+      </div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; max-width:620px; margin:0 auto; line-height:1.7;">
+        One student cleared at 0% did come forward — and they had nothing to confess. They simply wanted to clear their name. Every other student Turnitin identified as AI-assisted either confessed or stayed silent. <strong style="color:var(--text-light);">Not one tried to come forward and argue the tool was wrong about them.</strong> This is not a pattern. This is a <strong style="color:var(--text-light);">proof of concept.</strong>
+      </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 3B: EE AMNESTY + COMBINED -->
+<div class="section section-alt">
+  <div class="section-label">Section 03b — Extended Essay Amnesty & Combined Findings</div>
+  <div class="section-title">The Pattern Repeats: EE Amnesty Confirms Everything</div>
+  <p class="section-intro">After running the Cohort 14 EE data through Turnitin, we offered amnesty to the 8 flagged students. The results mirrored the AP Language study with striking consistency.</p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:28px;">
+    <div>
+      <div class="section-label" style="margin-bottom:16px;">EE Amnesty Results</div>
+      <div class="sankey">
+        <div class="sankey-left">
+          <div class="big">8</div>
+          <div class="lbl">EE students<br>flagged &gt;20%</div>
+        </div>
+        <div class="sankey-right">
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--red-bright)"></div>
+            <div class="sankey-item-label">Replied to amnesty email — almost immediately — admitting limited AI use</div>
+            <div class="sankey-item-num" style="color:var(--red-bright)">6</div>
+          </div>
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--text-muted)"></div>
+            <div class="sankey-item-label">Flagged — did not reply or come forward</div>
+            <div class="sankey-item-num" style="color:var(--text-muted)">2</div>
+          </div>
+          <div class="sankey-item">
+            <div class="sankey-dot" style="background:var(--green)"></div>
+            <div class="sankey-item-label">Students at 0% AI who came forward</div>
+            <div class="sankey-item-num" style="color:var(--green)">0</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px; background:rgba(39,174,96,0.07); border:1px solid rgba(39,174,96,0.2); border-radius:6px; padding:14px 18px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.6;">
+        <strong style="color:#2ecc71;">Zero false alarms.</strong> Not a single student who was cleared at 0% felt the need to come forward and defend themselves — because they had nothing to defend.
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label" style="margin-bottom:16px;">The Speed of Confession</div>
+      <div class="stat-card danger" style="margin-bottom:14px;">
+        <div class="stat-num red" style="font-size:36px;">Almost<br>Immediately</div>
+        <div class="stat-label">Response Time from Flagged Students</div>
+        <div class="stat-desc">6 of 8 flagged EE students replied to the amnesty email quickly — without prompting, follow-up, or pressure. They knew. The tool knew.</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:8px; padding:16px 20px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.6;">
+        The speed and voluntariness of these confessions is significant. Students who use AI know they used AI. When offered a safe exit, they take it — and they take it fast. The 2 who did not respond remain unresolved cases.
+      </div>
+    </div>
+  </div>
+
+  <!-- UNDER-REPORTING FINDING -->
+  <div style="background:linear-gradient(135deg, rgba(243,156,18,0.08), rgba(192,57,43,0.08)); border:1px solid rgba(243,156,18,0.3); border-left:4px solid var(--gold); border-radius:8px; padding:28px 32px; margin-bottom:28px;">
+    <div class="section-label" style="color:var(--gold); margin-bottom:10px;">Critical Finding — Under-Reporting of AI Use</div>
+    <h3 style="font-family:'Playfair Display',serif; font-size:20px; color:var(--gold); margin-bottom:14px;">"Light Use" That Wasn't: Students Are Not Telling the Full Truth</h3>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8; margin-bottom:16px;">
+      All 6 EE students who came forward characterized their AI use as <strong style="color:var(--text-light);">minimal and sanctioned</strong> — brainstorming, grammar checking, outlining. These are uses that fall within broadly acceptable parameters of AI assistance. However, further investigation into at least two of these students revealed a different picture: AI had been used to <strong style="color:var(--text-light);">"tighten" writing and rewrite full paragraphs</strong> — substantive authorship, not peripheral support.
+    </p>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:18px;">
+      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
+        <div style="font-size:22px; margin-bottom:6px;">💬</div>
+        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Students Said</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">"I used it for brainstorming, grammar, and outlining."</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
+        <div style="font-size:22px; margin-bottom:6px;">🔍</div>
+        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Investigation Showed</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">At least 2 students used AI to rewrite paragraphs and "tighten" prose — substantive authorship.</div>
+      </div>
+      <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:16px; text-align:center;">
+        <div style="font-size:22px; margin-bottom:6px;">❓</div>
+        <div style="font-size:12px; color:var(--text-light); font-weight:600; margin-bottom:4px;">What Likely Explains the Rest</div>
+        <div style="font-size:12px; color:var(--text-muted); font-weight:300; line-height:1.5;">Remaining students are likely under-reporting, or are unconsciously influenced by AI — as documented in the AP Language Inception Effect findings.</div>
+      </div>
+    </div>
+    <div style="background:rgba(0,0,0,0.2); border-radius:6px; padding:14px 18px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7; border-left:2px solid var(--gold);">
+      <strong style="color:var(--gold);">Implication:</strong> Self-reporting is an unreliable measure of actual AI use. Students either consciously minimize their disclosure to avoid consequences, or genuinely cannot recognize the extent to which AI has shaped their writing. Either way, self-reporting alone cannot serve as the basis for an academic integrity determination. <strong style="color:var(--text-light);">This is precisely why a supervised writing comparison is essential.</strong>
+    </div>
+  </div>
+
+  <!-- COMBINED STATS BANNER -->
+  <div style="background: linear-gradient(135deg, rgba(192,57,43,0.12), rgba(10,22,40,0.8)); border:1px solid rgba(192,57,43,0.3); border-radius:10px; padding:32px; margin-bottom:0;">
+    <div class="section-label" style="margin-bottom:18px; font-size:11px;">Combined Amnesty Data — AP Language + Extended Essay</div>
+    <div style="display:grid; grid-template-columns: repeat(5,1fr); gap:16px; margin-bottom:24px;">
+      <div style="text-align:center;">
+        <div style="font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:var(--white); line-height:1;">91</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Total papers<br>across both studies</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:var(--red-bright); line-height:1;">26</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Flagged above<br>20% AI</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:#5dade2; line-height:1;">20</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Flagged students<br>who came forward</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:var(--green); line-height:1;">0</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Students at 0% who<br>came forward</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-family:'Playfair Display',serif; font-size:42px; font-weight:900; color:var(--gold); line-height:1;">77%</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Confession rate<br>among flagged</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:20px;">
+      <p style="font-size:14px; color:var(--text-light); font-weight:400; line-height:1.8; text-align:center; max-width:700px; margin:0 auto;">
+        Across two separate studies, two different courses, two different cohorts — <strong style="color:var(--white)">the pattern is identical.</strong> Students who were flagged came forward. Students who were not flagged stayed silent. <strong style="color:var(--red-bright)">In both amnesty studies combined, not a single student who received 0% from Turnitin came forward to report AI use.</strong> This is not a coincidence. This is the tool working.
+      </p>
+    </div>
+  </div>
+
+  <!-- CHART 3: Confession Rate Comparison -->
+  <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:28px; margin-top:28px;">
+    <div class="section-label" style="margin-bottom:4px;">Amnesty Studies — Side by Side</div>
+    <div style="font-family:'Playfair Display',serif; font-size:18px; color:var(--white); margin-bottom:24px;">Confession Rate Among Flagged Students: AP Language vs. Extended Essay</div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:32px; align-items:end;">
+
+      <div style="text-align:center;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px;">AP Language</div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+          <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:900; color:var(--red-bright);">78%</div>
+          <div style="width:80px; background:linear-gradient(180deg,#e74c3c,#c0392b); border-radius:6px 6px 0 0; height:180px; margin-top:8px; display:flex; align-items:flex-start; justify-content:center; padding-top:10px;">
+            <span style="font-size:12px; color:rgba(255,255,255,0.8); font-weight:600;">14 of 18</span>
+          </div>
+          <div style="width:80px; height:4px; background:rgba(255,255,255,0.1);"></div>
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">flagged students<br>self-reported</div>
+      </div>
+
+      <div style="text-align:center;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px;">Extended Essay</div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+          <div style="font-family:'Playfair Display',serif; font-size:32px; font-weight:900; color:var(--red-bright);">75%</div>
+          <div style="width:80px; background:linear-gradient(180deg,#e74c3c,#c0392b); border-radius:6px 6px 0 0; height:173px; margin-top:8px; display:flex; align-items:flex-start; justify-content:center; padding-top:10px;">
+            <span style="font-size:12px; color:rgba(255,255,255,0.8); font-weight:600;">6 of 8</span>
+          </div>
+          <div style="width:80px; height:4px; background:rgba(255,255,255,0.1);"></div>
+        </div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:8px;">flagged students<br>self-reported</div>
+      </div>
+
+      <div style="text-align:center;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px;">Combined</div>
+        <div style="background:linear-gradient(135deg, rgba(192,57,43,0.15), rgba(10,22,40,0.6)); border:1px solid rgba(192,57,43,0.3); border-radius:10px; padding:24px 16px;">
+          <div style="font-family:'Playfair Display',serif; font-size:48px; font-weight:900; color:var(--white); line-height:1;">77%</div>
+          <div style="font-size:12px; color:var(--text-muted); margin:8px 0 20px;">20 of 26 flagged<br>students came forward</div>
+          <div style="border-top:1px solid rgba(255,255,255,0.08); padding-top:16px;">
+            <div style="font-family:'Playfair Display',serif; font-size:36px; font-weight:900; color:var(--green); line-height:1;">0</div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:6px;">students cleared at 0%<br>who came forward —<br>across either study</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 4: INCEPTION EFFECT -->
+<div class="section section-alt">
+  <div class="section-label">Section 05 — Qualitative Finding</div>
+  <div class="section-title">The "Inception Effect": AI Influence Students Don't Recognize</div>
+
+  <div class="inception-box" style="margin-bottom: 28px;">
+    <div class="inception-icon">🧠</div>
+    <div>
+      <h3>When Students Don't Know They're Being Influenced</h3>
+      <p>Two students who came forward during the amnesty period claimed they had only used ChatGPT for <strong>feedback</strong> — not to rewrite their essays. The teacher requested and reviewed their actual ChatGPT conversation logs. What the logs revealed was striking: <strong>ChatGPT kept rewriting their ideas in small snippets</strong>, even when students asked only for feedback. Those fragments — rephrased analysis, restructured sentences, sharpened claims — slowly migrated into the paper as the student continued working. The students had no awareness that their writing was being shaped by AI. <strong>Turnitin flagged it anyway.</strong></p>
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:16px;">
+    <div class="stat-card gold">
+      <div class="stat-label">What Students Said</div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; margin-top:8px; line-height:1.6;">"I only asked it for feedback, not to write for me."</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-label">What the Logs Showed</div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; margin-top:8px; line-height:1.6;">ChatGPT rewrote ideas incrementally, and students incorporated those fragments — often without realizing it.</div>
+    </div>
+    <div class="stat-card gold">
+      <div class="stat-label">What Turnitin Found</div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; margin-top:8px; line-height:1.6;">Still flagged. Even subtle, unintentional AI influence registers in the statistical patterns Turnitin detects.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px; background:rgba(0,0,0,0.2); border-radius:8px; padding:18px 24px; font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7; border-left:3px solid var(--gold);">
+    <strong style="color:var(--gold);">Policy implication:</strong> Students are not always consciously cheating. AI tools are designed to be persuasive and helpful — and that helpfulness becomes authorship contamination. Our policies must address not just intentional misuse, but the <em>structural temptation</em> that unsupervised AI access creates.
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 5: COHORT 14 -->
+<div class="section">
+  <div class="section-label">Section 06 — IB Cohort 14 Data</div>
+  <div class="section-title">Extended Essays & TOK Essays: The Scale of the Problem</div>
+  <p class="section-intro">All 34 Cohort 14 EE and TOK submissions were run through Turnitin. These are high-stakes IB assessments — externally graded, submitted to the IB. The results are deeply concerning.</p>
+
+  <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:16px; margin-bottom:28px;">
+    <div class="stat-card danger">
+      <div class="stat-num red">8</div>
+      <div class="stat-label">EEs Flagged Above 20%</div>
+      <div class="stat-desc">out of 34 submitted — 23.5% of the cohort. Scores range from 23% to 89% AI.</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-num red">13</div>
+      <div class="stat-label">TOK Essays Flagged Above 20%</div>
+      <div class="stat-desc">out of 34 submitted — 38.2% of the cohort. Scores range from 24% to 100% AI.</div>
+    </div>
+    <div class="stat-card warning">
+      <div class="stat-num amber">20</div>
+      <div class="stat-label">Inconclusive (*%) Combined</div>
+      <div class="stat-desc">8 EEs + 12 TOK essays. Turnitin is uncertain — likely hybrid authorship. Not cleared.</div>
+    </div>
+  </div>
+
+  <div class="cohort-wrap">
+    <!-- EE Panel -->
+    <div class="cohort-panel">
+      <div class="cohort-header ee">Extended Essays — AI Writing Scores</div>
+      <div class="cohort-row" style="background:rgba(0,0,0,0.15); font-size:11px; color:var(--text-muted);">
+        <span class="cohort-name">Student</span>
+        <span class="cohort-sim">Sim.</span>
+        <span class="cohort-ai">AI %</span>
+      </div>
+      <div class="cohort-row"><span class="cohort-name">Student 01</span><span class="cohort-sim">13%</span><span class="cohort-ai ai-high">89%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 02</span><span class="cohort-sim">17%</span><span class="cohort-ai ai-high">40%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 03</span><span class="cohort-sim">15%</span><span class="cohort-ai ai-high">36%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 04</span><span class="cohort-sim">9%</span><span class="cohort-ai ai-high">35%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 05</span><span class="cohort-sim">18%</span><span class="cohort-ai ai-mid">28%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 06</span><span class="cohort-sim">12%</span><span class="cohort-ai ai-mid">26%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 07</span><span class="cohort-sim">13%</span><span class="cohort-ai ai-mid">24%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 08</span><span class="cohort-sim">26%</span><span class="cohort-ai ai-mid">23%</span></div>
+      <div style="background:rgba(230,126,34,0.05); border-top:1px solid rgba(230,126,34,0.2);">
+        <div class="cohort-row"><span class="cohort-name" style="font-style:italic;color:var(--text-muted)">8 additional students</span><span class="cohort-sim">varies</span><span class="cohort-ai ai-inc">*%</span></div>
+      </div>
+      <div class="cohort-summary"><strong>8 flagged (>20%)</strong> · 8 inconclusive (*%) · 18 at 0%</div>
+    </div>
+
+    <!-- TOK Panel -->
+    <div class="cohort-panel">
+      <div class="cohort-header tok">TOK Essays — AI Writing Scores</div>
+      <div class="cohort-row" style="background:rgba(0,0,0,0.15); font-size:11px; color:var(--text-muted);">
+        <span class="cohort-name">Student</span>
+        <span class="cohort-sim">Sim.</span>
+        <span class="cohort-ai">AI %</span>
+      </div>
+      <div class="cohort-row"><span class="cohort-name">Student 01</span><span class="cohort-sim">19%</span><span class="cohort-ai ai-high">100%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 02</span><span class="cohort-sim">13%</span><span class="cohort-ai ai-high">71%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 03</span><span class="cohort-sim">4%</span><span class="cohort-ai ai-high">61%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 04</span><span class="cohort-sim">10%</span><span class="cohort-ai ai-high">60%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 05</span><span class="cohort-sim">22%</span><span class="cohort-ai ai-high">53%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 06</span><span class="cohort-sim">9%</span><span class="cohort-ai ai-high">47%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 07</span><span class="cohort-sim">10%</span><span class="cohort-ai ai-high">46%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 08</span><span class="cohort-sim">20%</span><span class="cohort-ai ai-high">41%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 09</span><span class="cohort-sim">14%</span><span class="cohort-ai ai-mid">40%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 10</span><span class="cohort-sim">20%</span><span class="cohort-ai ai-mid">37%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 11</span><span class="cohort-sim">11%</span><span class="cohort-ai ai-mid">30%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 12</span><span class="cohort-sim">14%</span><span class="cohort-ai ai-mid">29%</span></div>
+      <div class="cohort-row"><span class="cohort-name">Student 13</span><span class="cohort-sim">26%</span><span class="cohort-ai ai-mid">24%</span></div>
+      <div style="background:rgba(230,126,34,0.05); border-top:1px solid rgba(230,126,34,0.2);">
+        <div class="cohort-row"><span class="cohort-name" style="font-style:italic;color:var(--text-muted)">12 additional students</span><span class="cohort-sim">varies</span><span class="cohort-ai ai-inc">*%</span></div>
+      </div>
+      <div class="cohort-summary"><strong>13 flagged (>20%)</strong> · 12 inconclusive (*%) · 9 at 0%</div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px; background:rgba(192,57,43,0.07); border:1px solid rgba(192,57,43,0.2); border-radius:8px; padding:18px 24px;">
+    <div class="section-label" style="margin-bottom:10px;">Repeat Offenders: Same Students Flagged Across Multiple Assessments</div>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7;"><strong style="color:var(--red-bright)">6 students appear flagged in both their EE and their TOK essay.</strong> This is not isolated experimentation — it indicates a <strong style="color:var(--text-light)">pattern of AI-reliant writing across their most important academic work</strong>. These are externally assessed IB documents submitted to the IB. The IB takes academic misconduct seriously; our institution must as well.</p>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION: THE TREND -->
+<div class="section">
+  <div class="section-label">Section 07 — The Trend Line</div>
+  <div class="section-title">AI Use Is Growing. In Four Months, It Got Significantly Worse.</div>
+  <p class="section-intro">The EE submissions came in September 2025. The TOK essays came in January 2026. No consequences were issued in between. The data shows exactly what happens when there is no institutional response.</p>
+
+  <!-- MAIN BEFORE/AFTER COMPARISON -->
+  <div style="display:grid; grid-template-columns: 1fr auto 1fr; gap:0; align-items:stretch; margin-bottom:28px;">
+
+    <!-- EE Column -->
+    <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-right:none; border-radius:10px 0 0 10px; padding:32px 28px;">
+      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px;">September 2025</div>
+      <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--white); font-weight:700; margin-bottom:24px;">Extended Essays</div>
+
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Flagging Rate</div>
+        <div style="font-family:'Playfair Display',serif; font-size:56px; font-weight:900; color:var(--amber); line-height:1;">23.5%</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">8 of 34 students flagged above 20%</div>
+      </div>
+
+      <div style="height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden; margin-bottom:20px;">
+        <div style="width:23.5%; height:100%; background:var(--amber); border-radius:3px;"></div>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:18px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Avg. AI Score Among Flagged</div>
+        <div style="font-family:'Playfair Display',serif; font-size:36px; font-weight:900; color:var(--amber); line-height:1;">37.6%</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">across 8 flagged EEs</div>
+      </div>
+
+      <div style="margin-top:20px; display:flex; flex-wrap:wrap; gap:6px;">
+        <div style="background:rgba(230,126,34,0.15); border:1px solid rgba(230,126,34,0.3); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber);">89%</div>
+        <div style="background:rgba(230,126,34,0.15); border:1px solid rgba(230,126,34,0.3); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber);">40%</div>
+        <div style="background:rgba(230,126,34,0.15); border:1px solid rgba(230,126,34,0.3); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber);">36%</div>
+        <div style="background:rgba(230,126,34,0.15); border:1px solid rgba(230,126,34,0.3); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber);">35%</div>
+        <div style="background:rgba(230,126,34,0.15); border:1px solid rgba(230,126,34,0.3); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber);">28%</div>
+        <div style="background:rgba(230,126,34,0.15); border:1px solid rgba(230,126,34,0.3); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber);">26%</div>
+        <div style="background:rgba(230,126,34,0.15); border:1px solid rgba(230,126,34,0.3); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber);">24%</div>
+        <div style="background:rgba(230,126,34,0.15); border:1px solid rgba(230,126,34,0.3); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--amber);">23%</div>
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(192,57,43,0.08); border-top:1px solid rgba(255,255,255,0.06); border-bottom:1px solid rgba(255,255,255,0.06); padding:24px 20px; gap:12px;">
+      <div style="font-family:'DM Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--text-muted); text-align:center; writing-mode:vertical-rl;">4 MONTHS · NO CONSEQUENCES</div>
+      <div style="font-size:28px; color:var(--red-bright);">↓</div>
+      <div style="background:var(--red-bright); border-radius:6px; padding:8px 12px; text-align:center;">
+        <div style="font-family:'Playfair Display',serif; font-size:18px; font-weight:900; color:var(--white);">+63%</div>
+        <div style="font-size:9px; color:rgba(255,255,255,0.7); letter-spacing:1px; margin-top:2px;">MORE FLAGS</div>
+      </div>
+      <div style="font-size:28px; color:var(--red-bright);">↓</div>
+    </div>
+
+    <!-- TOK Column -->
+    <div style="background:rgba(192,57,43,0.06); border:1px solid rgba(192,57,43,0.25); border-left:none; border-radius:0 10px 10px 0; padding:32px 28px;">
+      <div style="font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--red-bright); opacity:0.7; margin-bottom:6px;">January 2026</div>
+      <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--white); font-weight:700; margin-bottom:24px;">TOK Essays</div>
+
+      <div style="margin-bottom:20px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Flagging Rate</div>
+        <div style="font-family:'Playfair Display',serif; font-size:56px; font-weight:900; color:var(--red-bright); line-height:1;">38.2%</div>
+        <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">13 of 34 students flagged above 20%</div>
+      </div>
+
+      <div style="height:6px; background:rgba(255,255,255,0.06); border-radius:3px; overflow:hidden; margin-bottom:20px;">
+        <div style="width:38.2%; height:100%; background:var(--red-bright); border-radius:3px;"></div>
+      </div>
+
+      <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:18px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Avg. AI Score Among Flagged</div>
+        <div style="font-family:'Playfair Display',serif; font-size:36px; font-weight:900; color:var(--red-bright); line-height:1;">49.2%</div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">across 13 flagged TOK essays</div>
+      </div>
+
+      <div style="margin-top:20px; display:flex; flex-wrap:wrap; gap:6px;">
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">100%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">71%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">61%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">60%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">53%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">47%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">46%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">41%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">40%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">37%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">30%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">29%</div>
+        <div style="background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.35); border-radius:4px; padding:4px 10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--red-bright);">24%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISUAL BAR COMPARISON -->
+  <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:28px; margin-bottom:24px;">
+    <div style="font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:20px;">Side-by-Side: Both Metrics Getting Worse</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:32px;">
+
+      <div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Students Flagged Above 20%</div>
+        <div class="bar-row">
+          <div class="bar-name" style="width:80px;">EE (Sept)</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:23.5%; background:var(--amber);"><span>8/34</span></div>
+          </div>
+          <div class="bar-pct" style="color:var(--amber);">23.5%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name" style="width:80px;">TOK (Jan)</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:38.2%; background:var(--red-bright);"><span>13/34</span></div>
+          </div>
+          <div class="bar-pct" style="color:var(--red-bright);">38.2%</div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Avg. AI Score Among Flagged Students</div>
+        <div class="bar-row">
+          <div class="bar-name" style="width:80px;">EE (Sept)</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:37.6%; background:var(--amber);"><span>37.6%</span></div>
+          </div>
+          <div class="bar-pct" style="color:var(--amber);">avg</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name" style="width:80px;">TOK (Jan)</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:49.2%; background:var(--red-bright);"><span>49.2%</span></div>
+          </div>
+          <div class="bar-pct" style="color:var(--red-bright);">avg</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- THE ARGUMENT -->
+  <div style="background:linear-gradient(135deg, rgba(192,57,43,0.12), rgba(10,22,40,0.9)); border:1px solid rgba(192,57,43,0.3); border-radius:10px; padding:28px 36px; display:grid; grid-template-columns:auto 1fr; gap:28px; align-items:center;">
+    <div style="font-family:'Playfair Display',serif; font-size:64px; font-weight:900; color:var(--red-bright); line-height:1; white-space:nowrap;">4 mo.</div>
+    <div>
+      <div style="font-family:'Playfair Display',serif; font-size:20px; color:var(--white); font-weight:700; margin-bottom:10px; line-height:1.4;">Four months passed. No consequences were issued. AI use increased by 63% and became more severe.</div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7;">Students who used AI in September and faced no repercussions used it again in January — more freely, at higher rates, with greater reliance. The pattern is not random. It reflects a rational response to an environment where there are no consequences. <strong style="color:var(--text-light);">The absence of policy is itself a policy — and students have learned to read it.</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 6: PROBLEM WITH CURRENT POLICY -->
+<div class="section section-alt">
+  <div class="section-label">Section 08 — The Gap in Our Response</div>
+  <div class="section-title">Our Current Response Is Not Sufficient</div>
+
+  <div class="problem-box">
+    <h3>The Google Docs Loophole</h3>
+    <p>Our current practice: if a student says they wrote the work themselves and can show edit history in Google Docs, we accept that and close the case. <strong>This is a critical vulnerability.</strong> Google Docs revision history can be fabricated. A student can open a document, paste in AI-generated text while looking at another screen, and the edits will appear as their own typing. The edit history shows <em>that</em> the document was typed, not <em>where the ideas came from</em>. We are, in effect, accepting a loophole as evidence of integrity.</p>
+  </div>
+
+  <div style="display:grid; grid-template-columns: repeat(3,1fr); gap:16px;">
+    <div class="stat-card danger">
+      <div class="stat-label">The Problem</div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; margin-top:8px; line-height:1.6;">Students can type AI-generated text while viewing it on another screen. Google Docs records keystrokes, not the source of ideas.</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-label">What We're Missing</div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; margin-top:8px; line-height:1.6;">A tool we pay thousands of dollars for is flagging students at high confidence. We dismiss those findings with no formal process, no panel, no institutional record.</div>
+    </div>
+    <div class="stat-card danger">
+      <div class="stat-label">The Consequence</div>
+      <div style="font-size:13px; color:var(--text-muted); font-weight:300; margin-top:8px; line-height:1.6;">Students learn they can use AI freely, cite Google Docs as evidence, and face no consequences. This is not a policy — it is a permission.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SECTION 7: RECOMMENDATIONS -->
+<div class="section">
+  <div class="section-label">Section 09 — What We Need Now</div>
+  <div class="section-title">Recommended Policies & Institutional Actions</div>
+  <p class="section-intro">The data supports urgent action across three domains: classroom practice, IB/AP assessment procedures, and institutional governance.</p>
+
+  <div class="policy-grid">
+    <div class="policy-card">
+      <div class="policy-head panel">⚖ Establish an Academic Integrity Panel</div>
+      <div class="policy-body">
+        <div class="policy-item">Form a standing panel — teachers, administrators, counselor — to review flagged AI cases with a consistent process</div>
+        <div class="policy-item">Google Docs history alone is not sufficient as evidence of authentic authorship; panel must require additional verification</div>
+        <div class="policy-item">Develop a tiered consequence system: first offense, second offense, IB/AP referral thresholds</div>
+        <div class="policy-item">Maintain confidential institutional records of flagged cases for pattern identification across years</div>
+        <div class="policy-item">Align consequence policy with IB Academic Integrity policy for cohesion in IB assessments</div>
+      </div>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head classroom">📋 Classroom-Level Policies</div>
+      <div class="policy-body">
+        <div class="policy-item">No major writing assignments sent home — all substantial writing completed in supervised class time</div>
+        <div class="policy-item">When computers are used for writing in class, all screens must be visible to the teacher at all times</div>
+        <div class="policy-item">Reduce unmonitored computer writing time; increase handwritten drafts, verbal conferencing, and in-class composition</div>
+        <div class="policy-item">Any AI tool use must be declared on submission with a description of how it was used</div>
+        <div class="policy-item">Turnitin submission required for all major writing grades; AI score recorded in teacher gradebook</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGGESTION FRAMING -->
+  <div style="margin-top:32px; margin-bottom:16px; background:rgba(230,126,34,0.06); border:1px solid rgba(230,126,34,0.25); border-left:4px solid var(--amber); border-radius:8px; padding:18px 24px;">
+    <div class="section-label" style="color:var(--amber); margin-bottom:8px;">My Proposal — A New Response Protocol for Flagged Assessments</div>
+    <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.8;">
+      The following protocol is my personal recommendation based on two years of data, the amnesty study findings, and the external research reviewed in this report. Our current IB procedures — reflections, supervisor meetings, process journals — have not worked as a deterrent. Students who were supervised through those processes still submitted AI-assisted work. The protocol below is designed to produce <strong style="color:var(--text-light);">verifiable evidence of authorship</strong>, not just procedural compliance. I am presenting it here for administrative consideration and welcome discussion on implementation.
+    </p>
+  </div>
+
+  <!-- FULL-WIDTH IB AND AP CARDS -->
+  <div style="display:flex; flex-direction:column; gap:20px;">
+
+    <div class="policy-card">
+      <div class="policy-head ib">📚 Proposed IB Assessment Response Protocol (EE, TOK)</div>
+      <div class="policy-body" style="padding:20px 24px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; margin-bottom:20px;">
+          <div style="text-align:center; padding:16px; border-right:1px solid rgba(255,255,255,0.07);">
+            <div style="font-size:28px; margin-bottom:6px;">✍️</div>
+            <div style="font-size:11px; font-family:'DM Mono',monospace; letter-spacing:1px; color:var(--amber); text-transform:uppercase; margin-bottom:4px;">Stage 1</div>
+            <div style="font-size:13px; color:var(--text-light); font-weight:600;">Supervised Write</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.5;">1 hour · same topic · no technology</div>
+          </div>
+          <div style="text-align:center; padding:16px; border-right:1px solid rgba(255,255,255,0.07);">
+            <div style="font-size:28px; margin-bottom:6px;">🔬</div>
+            <div style="font-size:11px; font-family:'DM Mono',monospace; letter-spacing:1px; color:var(--amber); text-transform:uppercase; margin-bottom:4px;">Stage 2</div>
+            <div style="font-size:13px; color:var(--text-light); font-weight:600;">Linguistic Comparison</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.5;">voice · syntax · complexity · argument</div>
+          </div>
+          <div style="text-align:center; padding:16px;">
+            <div style="font-size:28px; margin-bottom:6px;">⚖️</div>
+            <div style="font-size:11px; font-family:'DM Mono',monospace; letter-spacing:1px; color:var(--red-bright); text-transform:uppercase; margin-bottom:4px;">Stage 3</div>
+            <div style="font-size:13px; color:var(--text-light); font-weight:600;">Panel → Appeal → Consequence</div>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px; line-height:1.5;">automatic failure if panel finds against student</div>
+          </div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:16px; display:flex; flex-direction:column; gap:10px;">
+          <div class="policy-item">Any EE or TOK submission flagged above 20% AI triggers a <strong style="color:var(--text-light);">mandatory one-hour supervised writing session</strong> — same topic, same essay type, no technology access</div>
+          <div class="policy-item">The supervised sample undergoes <strong style="color:var(--text-light);">linguistic comparison</strong> against the flagged submission — vocabulary range, syntactic complexity, argumentation style, and voice consistency are analyzed</div>
+          <div class="policy-item">Significant divergence between the two samples escalates the case to the <strong style="color:var(--text-light);">Academic Integrity Panel</strong> for review</div>
+          <div class="policy-item">The student has the right to <strong style="color:var(--text-light);">appeal before the panel</strong> and present supporting evidence — drafts, notes, research logs, or any documentation of their writing process</div>
+          <div class="policy-item">If the panel finds against the student: <strong style="color:var(--red-bright);">automatic failure of the assessment</strong> — no partial credit, no resubmission for the flagged work</div>
+          <div class="policy-item">Consequences are <strong style="color:var(--red-bright);">more severe</strong> if a student declines the supervised write, cannot produce process evidence, or is found to have fabricated revision history</div>
+          <div class="policy-item">Existing IB protocols — reflections, supervisor meetings, process journals — remain in place as <em>supporting context</em> but are no longer sufficient as standalone evidence of authorship</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="policy-card">
+      <div class="policy-head ap">📝 Proposed AP Assessment Response Protocol (Research, Seminar, Language)</div>
+      <div class="policy-body" style="padding:20px 24px;">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="policy-item">AP submissions flagged above 20% AI trigger the same <strong style="color:var(--text-light);">supervised writing protocol</strong> — one hour, same prompt type, no technology</div>
+          <div class="policy-item">Linguistic comparison between the supervised sample and the flagged submission is conducted by the teacher and, where possible, a second reviewer for objectivity</div>
+          <div class="policy-item">Significant divergence escalates to the <strong style="color:var(--text-light);">Academic Integrity Panel</strong>; student retains right of appeal with supporting evidence</div>
+          <div class="policy-item">Panel finding against the student results in <strong style="color:var(--red-bright);">automatic failure of the assignment</strong> — applying to AP Research papers, Seminar performance tasks, and major AP Language essays</div>
+          <div class="policy-item">College Board's academic integrity standards prohibit AI authorship; consequence policy must be communicated clearly to students and families at the start of each course</div>
+          <div class="policy-item">Build a portfolio of in-class timed writing samples early in the year to establish a <strong style="color:var(--text-light);">linguistic baseline</strong> for comparison throughout the course</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>The Data Is Speaking. We Need to Act.</h2>
+  <p>We have a reliable detection tool. We have documented evidence of widespread AI use in our most important assessments. We have a gap between what Turnitin is telling us and what our institution is doing about it. That gap closes with policy.</p>
+  <div class="cta-asks">
+    <div class="cta-ask">Form an AI Integrity Panel</div>
+    <div class="cta-ask">Revise Assessment Procedures</div>
+    <div class="cta-ask">Set Classroom Standards</div>
+    <div class="cta-ask">Define Consequences</div>
+  </div>
+</div>
+
+<!-- FOOTNOTE -->
+<div class="footnote">
+  <div>DATA SOURCES: AP Language Amnesty Study (N=57) · Cohort 14 EE (N=34) · Cohort 14 TOK (N=34) · 2023 AP Research Baseline (N=9) · Teacher Validation Study (N=7)</div>
+  <div>RESEARCH SOURCES: Temple University AI Detection Evaluation · Turnitin AIW-2 White Paper (Aug 2024) · Weber-Wulff et al. (2023), <em>International Journal for Educational Integrity</em> · Perkins et al. (2024), <em>International Journal of Educational Technology in Higher Education</em> · ResearchSquare preprint: "Evaluating the Accuracy and Reliability of AI Content Detectors" (2025) · Turnitin CPO public statement · Turnitin.com official documentation & FAQ · Liang et al. (2023), Stanford University</div>
+  <div>PREPARED BY: Michael Smith · Head of English Department / TOK Coordinator · American School of Dhahran · February 2026</div>
+</div>
+
+</body>
+</html>
