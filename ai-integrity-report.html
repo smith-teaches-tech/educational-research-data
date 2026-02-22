@@ -927,66 +927,94 @@
   <!-- CHARTS ROW -->
   <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-top:28px;">
 
-    <!-- CHART 1: Authentic vs AI Bar Chart -->
+    <!-- CHART 1: Validation Study Donut -->
     <div style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:24px;">
       <div class="section-label" style="margin-bottom:4px;">Validation Study Results</div>
       <div style="font-family:'Playfair Display',serif; font-size:18px; color:var(--white); margin-bottom:20px;">Authentic vs. AI-Written: Detection Accuracy</div>
 
-      <!-- Authentic papers -->
-      <div style="margin-bottom:18px;">
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Authentic Documents (43 papers across 4 groups)</div>
-        <div class="bar-row">
-          <div class="bar-name">Master's Papers</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);">
-              <span>5 of 5 → 0% AI ✓</span>
+      <div style="display:flex; gap:20px; align-items:center; margin-bottom:24px;">
+        <!-- SVG donut: 44 total docs. Circumference of r=50 = 314.16
+             Green (42 cleared): 42/44 = 95.45% → 299.9
+             Amber (1 inconclusive): 1/44 = 2.27% → 7.1
+             Red (1 AI caught): 1/44 = 2.27% → 7.1 -->
+        <svg width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0;">
+          <circle cx="70" cy="70" r="50" fill="none" stroke="#1a3a5c" stroke-width="22"/>
+          <!-- Green: 42 authentic cleared -->
+          <circle cx="70" cy="70" r="50" fill="none" stroke="#27ae60" stroke-width="22"
+            stroke-dasharray="299.9 314" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+          <!-- Amber: 1 inconclusive -->
+          <circle cx="70" cy="70" r="50" fill="none" stroke="#e67e22" stroke-width="22"
+            stroke-dasharray="7.1 314" stroke-dashoffset="-299.9" transform="rotate(-90 70 70)"/>
+          <!-- Red: 1 AI correctly caught -->
+          <circle cx="70" cy="70" r="50" fill="none" stroke="#e74c3c" stroke-width="22"
+            stroke-dasharray="7.1 314" stroke-dashoffset="-307" transform="rotate(-90 70 70)"/>
+          <text x="70" y="65" text-anchor="middle" fill="white" font-family="Playfair Display" font-size="20" font-weight="900">44</text>
+          <text x="70" y="82" text-anchor="middle" fill="#8892b0" font-family="DM Sans" font-size="10">documents</text>
+        </svg>
+
+        <div style="display:flex; flex-direction:column; gap:12px; flex:1;">
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:12px;height:12px;border-radius:2px;background:#27ae60;flex-shrink:0;"></div>
+                <span style="font-size:12px; color:var(--text-light);">Authentic — Correctly Cleared</span>
+              </div>
+              <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--green); font-weight:600;">42 <span style="font-size:10px; color:var(--text-muted);">95%</span></span>
+            </div>
+            <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+              <div style="width:95%; height:100%; background:#27ae60; border-radius:3px;"></div>
             </div>
           </div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-name">TOK Example</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);">
-              <span>1 of 1 → 0% AI ✓</span>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:12px;height:12px;border-radius:2px;background:#e67e22;flex-shrink:0;"></div>
+                <span style="font-size:12px; color:var(--text-light);">Authentic — Inconclusive (*%)</span>
+              </div>
+              <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--amber); font-weight:600;">1 <span style="font-size:10px; color:var(--text-muted);">2%</span></span>
+            </div>
+            <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+              <div style="width:2%; height:100%; background:#e67e22; border-radius:3px;"></div>
             </div>
           </div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-name">2023 AP Research</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:89%; background:linear-gradient(90deg,#27ae60,#2ecc71);">
-              <span>8 of 9 → 0% AI ✓</span>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:12px;height:12px;border-radius:2px;background:#e74c3c;flex-shrink:0;"></div>
+                <span style="font-size:12px; color:var(--text-light);">AI-Written — Correctly Flagged</span>
+              </div>
+              <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--red-bright); font-weight:600;">1 <span style="font-size:10px; color:var(--text-muted);">2%</span></span>
             </div>
-          </div>
-          <div class="bar-pct" style="color:var(--green)">89%</div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-name">2022 IB EEs</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);">
-              <span>13 of 13 → 0% AI ✓</span>
-            </div>
-          </div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-name">2022 IB TOK</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);">
-              <span>15 of 15 → 0% AI ✓</span>
+            <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+              <div style="width:2%; height:100%; background:#e74c3c; border-radius:3px;"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:16px; margin-bottom:8px;">
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">AI-Written Document (1 paper)</div>
+      <!-- Group breakdown -->
+      <div style="border-top:1px solid rgba(255,255,255,0.07); padding-top:16px;">
+        <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px;">Authentic Groups — All Cleared</div>
         <div class="bar-row">
-          <div class="bar-name">AI-Written TOK Essay</div>
-          <div class="bar-track">
-            <div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#c0392b,#e74c3c);">
-              <span>Returned 100% AI ✗</span>
-            </div>
-          </div>
+          <div class="bar-name">Master's Papers</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);"><span>5 of 5 → 0% AI ✓</span></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">TOK Example</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);"><span>1 of 1 → 0% AI ✓</span></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">2023 AP Research</div>
+          <div class="bar-track"><div class="bar-fill" style="width:89%; background:linear-gradient(90deg,#27ae60,#2ecc71);"><span>8 of 9 → 0% AI ✓</span></div></div>
+          <div class="bar-pct" style="color:var(--green)">89%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">2022 IB EEs</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);"><span>13 of 13 → 0% AI ✓</span></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-name">2022 IB TOK</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%; background:linear-gradient(90deg,#27ae60,#2ecc71);"><span>15 of 15 → 0% AI ✓</span></div></div>
         </div>
       </div>
 
