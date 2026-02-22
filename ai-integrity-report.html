@@ -933,19 +933,19 @@
       <div style="font-family:'Playfair Display',serif; font-size:18px; color:var(--white); margin-bottom:20px;">Authentic vs. AI-Written: Detection Accuracy</div>
 
       <div style="display:flex; gap:20px; align-items:center; margin-bottom:24px;">
-        <!-- SVG donut: 45 total docs. Circumference of r=50 = 314.16
-             Green (43 cleared): 43/45 = 95.6% → 300.2
-             Red (1 AI caught): 1/45 = 2.2% → 7.0
-             All 28 pre-ChatGPT papers returned 0% — no amber slice needed -->
+        <!-- SVG donut: 44 total docs (43 authentic cleared + 1 AI caught). Circumference = 314.16
+             Green (43/44 = 97.7%): 307.02
+             Red (1/44 = 2.3%): 7.14
+             Sum = 314.16 — no gap -->
         <svg width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0;">
           <circle cx="70" cy="70" r="50" fill="none" stroke="#1a3a5c" stroke-width="22"/>
           <!-- Green: 43 authentic cleared -->
           <circle cx="70" cy="70" r="50" fill="none" stroke="#27ae60" stroke-width="22"
-            stroke-dasharray="300.2 314" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
+            stroke-dasharray="307.02 314.16" stroke-dashoffset="0" transform="rotate(-90 70 70)"/>
           <!-- Red: 1 AI correctly caught -->
           <circle cx="70" cy="70" r="50" fill="none" stroke="#e74c3c" stroke-width="22"
-            stroke-dasharray="7.0 314" stroke-dashoffset="-300.2" transform="rotate(-90 70 70)"/>
-          <text x="70" y="65" text-anchor="middle" fill="white" font-family="Playfair Display" font-size="20" font-weight="900">45</text>
+            stroke-dasharray="7.14 314.16" stroke-dashoffset="-307.02" transform="rotate(-90 70 70)"/>
+          <text x="70" y="65" text-anchor="middle" fill="white" font-family="Playfair Display" font-size="20" font-weight="900">44</text>
           <text x="70" y="82" text-anchor="middle" fill="#8892b0" font-family="DM Sans" font-size="10">documents</text>
         </svg>
 
@@ -956,10 +956,10 @@
                 <div style="width:12px;height:12px;border-radius:2px;background:#27ae60;flex-shrink:0;"></div>
                 <span style="font-size:12px; color:var(--text-light);">Authentic — Correctly Cleared</span>
               </div>
-              <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--green); font-weight:600;">43 <span style="font-size:10px; color:var(--text-muted);">96%</span></span>
+              <span style="font-family:'DM Mono',monospace; font-size:13px; color:var(--green); font-weight:600;">43 <span style="font-size:10px; color:var(--text-muted);">98%</span></span>
             </div>
             <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
-              <div style="width:96%; height:100%; background:#27ae60; border-radius:3px;"></div>
+              <div style="width:98%; height:100%; background:#27ae60; border-radius:3px;"></div>
             </div>
           </div>
           <div>
@@ -1004,7 +1004,7 @@
       </div>
 
       <div style="margin-top:16px; background:rgba(39,174,96,0.08); border-left:3px solid var(--green); border-radius:4px; padding:10px 14px; font-size:12px; color:var(--text-muted);">
-        <strong style="color:var(--green);">Result:</strong> 43 of 44 authentic documents correctly cleared across all groups. 1 AI document correctly flagged at 100%. Zero false positives above the 20% threshold.</div>
+        <strong style="color:var(--green);">Result:</strong> All 43 authentic documents correctly cleared across all groups. 1 AI document correctly flagged at 100%. Zero false positives above the 20% threshold.</div>
     </div>
 
     <!-- CHART 2: EE + TOK Cohort Pie-style breakdown -->
