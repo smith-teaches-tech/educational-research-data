@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Detection at Our School — What the Data Shows</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1a2e;
+    --ink-soft: #3d3d5c;
+    --ink-muted: #7a7a9a;
+    --green: #1a7a4a;
+    --green-light: #e8f5ee;
+    --green-mid: #2ecc71;
+    --red: #c0392b;
+    --red-light: #fdf0ee;
+    --amber: #d4830a;
+    --amber-light: #fef7ea;
+    --blue: #1a5c8a;
+    --blue-light: #e8f0f8;
+    --rule: #e0e0ec;
+    --bg: #fafafa;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--rule);
+    padding: 48px 24px 40px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    max-width: 700px;
+    margin: 0 auto 16px;
+  }
+
+  .subtitle {
+    font-size: 17px;
+    color: var(--ink-soft);
+    font-weight: 300;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* LAYOUT */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  section {
+    padding: 52px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  section:last-child { border-bottom: none; }
+
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-family: 'Lora', serif;
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  p {
+    color: var(--ink-soft);
+    font-weight: 300;
+    margin-bottom: 16px;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  strong { color: var(--ink); font-weight: 500; }
+
+  /* CALLOUT BOX */
+  .callout {
+    border-radius: 10px;
+    padding: 22px 26px;
+    margin: 24px 0;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .callout-green {
+    background: var(--green-light);
+    border-left: 4px solid var(--green);
+    color: var(--ink-soft);
+  }
+
+  .callout-green strong { color: var(--green); }
+
+  .callout-amber {
+    background: var(--amber-light);
+    border-left: 4px solid var(--amber);
+    color: var(--ink-soft);
+  }
+
+  .callout-blue {
+    background: var(--blue-light);
+    border-left: 4px solid var(--blue);
+    color: var(--ink-soft);
+  }
+
+  /* STAT ROW */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 22px 20px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Lora', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  /* CHART AREA */
+  .chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 28px 0;
+  }
+
+  .chart-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 24px;
+  }
+
+  .chart-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 20px;
+  }
+
+  /* BAR COMPARE */
+  .bar-compare { display: flex; flex-direction: column; gap: 16px; }
+
+  .bar-item {}
+
+  .bar-label-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+
+  .bar-track {
+    height: 28px;
+    background: #f0f0f6;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    white-space: nowrap;
+    transition: width 1s ease;
+  }
+
+  /* DONUT CHART */
+  .donut-wrap {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .donut-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+
+  .legend-val {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* AMNESTY SECTION */
+  .amnesty-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 28px 0;
+  }
+
+  .amnesty-card {
+    background: var(--white);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 24px;
+  }
+
+  .amnesty-num {
+    font-family: 'Lora', serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .amnesty-desc {
+    font-size: 13px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--ink);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 32px 36px;
+    margin: 28px 0;
+    text-align: center;
+  }
+
+  .highlight-box .big-stat {
+    font-family: 'Lora', serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+
+  .highlight-box p {
+    color: rgba(255,255,255,0.7);
+    font-size: 15px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+
+  /* DOT MATRIX */
+  .dot-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 16px 0;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--white);
+    border-top: 1px solid var(--rule);
+    padding: 28px 24px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 600px) {
+    .stat-row { grid-template-columns: 1fr; }
+    .chart-row { grid-template-columns: 1fr; }
+    .amnesty-grid { grid-template-columns: 1fr; }
+    .donut-wrap { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Academic Integrity · 2025–2026</div>
+  <h1>Is AI Detection Reliable? Here's What Our Internal Research Shows.</h1>
+  <p class="subtitle">A plain-language summary of the data we gathered this year on Turnitin's AI detection tool — and what it means for your student's academic work.</p>
+</header>
+
+<main>
+
+  <!-- SECTION 1: WHAT IS TURNITIN -->
+  <section>
+    <div class="section-tag">Background</div>
+    <h2>What Is Turnitin's AI Detector?</h2>
+    <p>Turnitin is the same tool schools have used for years to check for plagiarism. In recent years, Turnitin added an AI writing detector — a system trained to identify text generated by tools like ChatGPT, Claude, or Gemini.</p>
+    <p>When a student submits a paper, Turnitin returns an <strong>AI percentage score</strong>. Turnitin is deliberately conservative: it only reports a score above 20% when it has high confidence that AI-generated content is present. Below 20%, it withholds a number entirely and shows <strong>"*%"</strong> — meaning it's uncertain and declines to make a call.</p>
+
+    <div class="callout callout-blue">
+      <strong>Why 20%?</strong> Turnitin's own research, validated against 800,000 documents written before AI tools existed, shows that above the 20% threshold, the false positive rate — flagging a student who did not use AI — drops below 1%. The tool is designed to err on the side of the student.
+    </div>
+
+    <p>A common question is whether this tool can be trusted. We didn't take that on faith. We tested it ourselves.</p>
+  </section>
+
+  <!-- SECTION 2: INTERNAL VALIDATION -->
+  <section>
+    <div class="section-tag">Our Testing</div>
+    <h2>We Tested It With Documents of Known Authorship</h2>
+    <p>To validate Turnitin's accuracy, we gathered <strong>44 documents with known authorship</strong> — including graduate-level academic papers, model essays, AP Research submissions from 2023, and IB Extended Essays and TOK essays written in 2022, before AI tools like ChatGPT were publicly available. We also included one document written entirely using ChatGPT.</p>
+    <p>If Turnitin is unreliable, we would expect to see authentic documents flagged incorrectly. Here is what we found:</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green);">43</div>
+        <div class="stat-label">Authentic documents<br>correctly cleared at 0% AI</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--red);">1</div>
+        <div class="stat-label">AI-written document<br>correctly flagged at 100%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green);">0</div>
+        <div class="stat-label">False positives<br>above the 20% threshold</div>
+      </div>
+    </div>
+
+    <!-- DONUT CHART -->
+    <div class="chart-card" style="margin-bottom:0;">
+      <div class="chart-title">44 Documents — Known Authorship — Turnitin Results</div>
+      <div class="donut-wrap">
+        <!-- Circumference r=54: 339.3. Green 43/44 = 331.7. Red 1/44 = 7.7 -->
+        <svg width="150" height="150" viewBox="0 0 150 150" style="flex-shrink:0;">
+          <circle cx="75" cy="75" r="54" fill="none" stroke="#e8f0f8" stroke-width="22"/>
+          <circle cx="75" cy="75" r="54" fill="none" stroke="#1a7a4a" stroke-width="22"
+            stroke-dasharray="331.7 339.3" stroke-dashoffset="0" transform="rotate(-90 75 75)"/>
+          <circle cx="75" cy="75" r="54" fill="none" stroke="#c0392b" stroke-width="22"
+            stroke-dasharray="7.7 339.3" stroke-dashoffset="-331.7" transform="rotate(-90 75 75)"/>
+          <text x="75" y="70" text-anchor="middle" fill="#1a1a2e" font-family="Lora, serif" font-size="22" font-weight="700">44</text>
+          <text x="75" y="88" text-anchor="middle" fill="#7a7a9a" font-family="DM Sans, sans-serif" font-size="10">documents</text>
+        </svg>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--green);"></div>
+            <span>Authentic — Correctly Cleared</span>
+            <span class="legend-val" style="color:var(--green);">43 <span style="color:var(--ink-muted);font-size:11px;">98%</span></span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--red);"></div>
+            <span>AI-Written — Correctly Flagged</span>
+            <span class="legend-val" style="color:var(--red);">1 <span style="color:var(--ink-muted);font-size:11px;">2%</span></span>
+          </div>
+          <div style="margin-top:8px; padding-top:12px; border-top:1px solid var(--rule); font-size:12px; color:var(--ink-muted); line-height:1.6;">
+            The 43 authentic documents span graduate papers, teacher-written model essays, pre-AI student work from 2022, and AP Research papers from early 2023. Not one was incorrectly flagged.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: BEFORE vs NOW -->
+  <section>
+    <div class="section-tag">The Data</div>
+    <h2>Before AI vs. This Year: A Clear Shift</h2>
+    <p>The most direct test is a simple comparison: run the detector on papers written <em>before</em> AI tools existed, then on papers submitted this year. The same tool, the same essay types, the same school.</p>
+
+    <div class="chart-row">
+      <div class="chart-card">
+        <div class="chart-title">Pre-AI Papers (Before 2022–23)</div>
+        <div class="bar-compare">
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span>Flagged above 20% AI</span>
+              <strong style="color:var(--green);">0%</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:2%; background:var(--green); min-width:8px;"></div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span>Cleared at 0% AI</span>
+              <strong style="color:var(--green);">100%</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:100%; background:var(--green);">28 of 28 papers</div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:12px; color:var(--ink-muted); margin-top:16px; line-height:1.6;">28 IB-style essays written before ChatGPT was released — submitted to Turnitin's current model. Every single one returned 0% AI.</p>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-title">Papers Received This Year (2025–26)</div>
+        <div class="bar-compare">
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span>Flagged above 20% AI</span>
+              <strong style="color:var(--red);">31%</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:31%; background:var(--red);">31%</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span>Inconclusive (below threshold)</span>
+              <strong style="color:var(--amber);">29%</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:29%; background:var(--amber);">29%</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label-row">
+              <span>Cleared at 0% AI</span>
+              <strong style="color:var(--green);">40%</strong>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:40%; background:var(--green);">40%</div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:12px; color:var(--ink-muted); margin-top:16px; line-height:1.6;">The same tool that returned 0% on pre-AI papers now flags 31% of this year's submissions — a shift we cannot attribute to the detector.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>The key point:</strong> Because Turnitin returns 0% on papers written before AI existed, we know the increase in flagging is not a tool problem. The baseline for authentic student writing from this school is 0%. The tool has not changed. Student behavior has.
+    </div>
+  </section>
+
+  <!-- SECTION 4: AMNESTY STUDIES -->
+  <section>
+    <div class="section-tag">Voluntary Disclosure Studies</div>
+    <h2>We Asked Students to Come Forward — And They Did</h2>
+    <p>Across two separate studies — one in AP Language, one involving IB Extended Essays — students were informed that papers had been reviewed and were invited to come forward voluntarily if they had used AI. There were <strong>no consequences</strong> for disclosure. Students did not know whether they had been flagged or not.</p>
+    <p>The results were striking in two directions: the students who came forward were overwhelmingly the ones Turnitin had flagged — and not one student who had received a 0% score came forward to suggest the tool had wrongly accused them.</p>
+
+    <!-- HEADLINE STAT -->
+    <div class="highlight-box">
+      <div class="big-stat">77%</div>
+      <p>of students flagged above 20% AI came forward voluntarily to admit some form of AI use — across two separate studies, two different courses.</p>
+    </div>
+
+    <div class="amnesty-grid">
+      <div class="amnesty-card">
+        <div class="amnesty-num" style="color:var(--red);">20</div>
+        <div style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:6px;">Flagged students who came forward</div>
+        <div class="amnesty-desc">20 out of 26 flagged students voluntarily admitted AI use when offered a consequence-free disclosure — without being told whether they had been flagged.</div>
+      </div>
+      <div class="amnesty-card">
+        <div class="amnesty-num" style="color:var(--green);">0</div>
+        <div style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:6px;">Students at 0% who disputed their result</div>
+        <div class="amnesty-desc">Not one student who received a clean 0% score came forward to say the tool had wrongly flagged them. The students who came forward were the students the tool had identified.</div>
+      </div>
+    </div>
+
+    <!-- DOT MATRIX -->
+    <div class="chart-card">
+      <div class="chart-title">All 91 Students Across Both Studies</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start;">
+        <div>
+          <div style="font-size:12px; color:var(--ink-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; font-family:'DM Mono',monospace; font-size:10px;">Came Forward (21)</div>
+          <div class="dot-wrap">
+            <!-- 20 red flagged -->
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b"/></svg>
+            <!-- 1 amber false negative -->
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#d4830a"/></svg>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:12px;">
+            <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-muted);">
+              <svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#c0392b"/></svg>
+              <span><strong style="color:var(--ink);">20 students</strong> — flagged, admitted AI use</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-muted);">
+              <svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#d4830a"/></svg>
+              <span><strong style="color:var(--ink);">1 student</strong> — not flagged, admitted AI use (tool missed it)</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px; color:var(--ink-muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:1px; font-family:'DM Mono',monospace; font-size:10px;">Did Not Come Forward (70)</div>
+          <div class="dot-wrap">
+            <!-- 6 red flagged silent -->
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b" opacity="0.5"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b" opacity="0.5"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b" opacity="0.5"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b" opacity="0.5"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b" opacity="0.5"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="8" fill="#c0392b" opacity="0.5"/></svg>
+            <!-- 64 gray clean silent -->
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="6" fill="#d8d8e8"/></svg>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:6px; margin-top:12px;">
+            <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-muted);">
+              <svg width="12" height="12"><circle cx="6" cy="6" r="5" fill="#c0392b" opacity="0.5"/></svg>
+              <span><strong style="color:var(--ink);">6 students</strong> — flagged, stayed silent (unresolved)</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-muted);">
+              <svg width="12" height="12"><circle cx="6" cy="6" r="4" fill="#d8d8e8"/></svg>
+              <span><strong style="color:var(--ink);">64 students</strong> — 0% AI, nothing to report, stayed silent</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-amber">
+      <strong>What about the 6 who didn't respond?</strong> These students remain unresolved. They may be unwilling to admit AI use, or in rare cases may represent false positives. A supervised writing comparison — where a student writes on the same topic in a controlled setting — is the appropriate next step to distinguish between the two.
+    </div>
+  </section>
+
+  <!-- SECTION 5: BOTTOM LINE -->
+  <section>
+    <div class="section-tag">Conclusion</div>
+    <h2>What This Means</h2>
+    <p>The data points in one direction. Turnitin's AI detector, used at the 20% threshold, is a reliable tool. It does not flag authentic student writing. It correctly identifies AI-generated content. And when students who were flagged were given a private, consequence-free opportunity to come forward, most did — confirming what the tool had already found.</p>
+    <p>This is not about punishing students or assuming the worst. It is about ensuring that the work students submit genuinely represents their own thinking and effort — which is the foundation of any meaningful academic credential.</p>
+    <div class="callout callout-green">
+      <strong>Questions?</strong> If you have questions about how this data relates to your student's work specifically, please reach out directly. All data in this report is aggregate and anonymised.
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Academic Integrity Report · 2025–2026 · Data collected internally. All student data is anonymised and aggregated.
+</footer>
+
+</body>
+</html>
