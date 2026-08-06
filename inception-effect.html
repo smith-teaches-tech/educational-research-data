@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Inception Effect — Michael Smith · Research Data</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root{
+      --navy:#080f1c; --navy-mid:#0d1a2e; --navy-card:#111f35;
+      --red:#c0392b; --red-bright:#e74c3c; --amber:#e67e22; --gold:#f39c12;
+      --green:#27ae60; --blue:#1a5c8a; --violet:#8b7bff;
+      --white:#f0f4f8; --muted:#6b8099; --light:#a8bfcf; --border:rgba(255,255,255,0.07);
+    }
+    html{ scroll-behavior:smooth; }
+    body{ background:var(--navy); color:var(--white); font-family:'DM Sans',sans-serif; font-weight:300; min-height:100vh; overflow-x:hidden; }
+    body::before{ content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:0; opacity:0.5; }
+
+    header{ position:relative; z-index:10; border-bottom:1px solid var(--border); padding:22px 60px; display:flex; align-items:center; justify-content:space-between; background:rgba(8,15,28,0.9); backdrop-filter:blur(12px); }
+    .header-left{ display:flex; align-items:center; gap:16px; }
+    .header-logo{ width:36px; height:36px; background:var(--red); border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:14px; font-weight:500; color:white; flex-shrink:0; }
+    .header-name{ font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--light); }
+    .header-name span{ color:var(--muted); }
+    .header-right a{ font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); text-decoration:none; }
+    .header-right a:hover{ color:var(--light); }
+
+    .hero{ position:relative; z-index:1; padding:92px 60px 56px; max-width:1160px; margin:0 auto; }
+    .hero-eyebrow{ font-family:'DM Mono',monospace; font-size:10px; letter-spacing:4px; text-transform:uppercase; color:var(--red-bright); margin-bottom:24px; display:flex; align-items:center; gap:12px; }
+    .hero-eyebrow::before{ content:''; display:inline-block; width:32px; height:1px; background:var(--red-bright); }
+    .hero h1{ font-family:'Playfair Display',serif; font-size:clamp(44px,7vw,74px); font-weight:900; line-height:1.04; margin-bottom:26px; max-width:820px; }
+    .hero h1 em{ font-style:italic; color:var(--red-bright); }
+    .hero-desc{ font-size:clamp(15px,1.7vw,18px); color:var(--light); font-weight:300; max-width:640px; line-height:1.8; }
+    .hero-chips{ display:flex; gap:10px; flex-wrap:wrap; margin-top:34px; }
+    .chip{ background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:4px; padding:6px 14px; font-family:'DM Mono',monospace; font-size:11px; color:var(--light); letter-spacing:1px; }
+
+    .rule{ max-width:1160px; margin:0 auto; padding:0 60px; position:relative; z-index:1; }
+    .rule hr{ border:none; border-top:1px solid var(--border); }
+
+    section.block{ position:relative; z-index:1; max-width:1160px; margin:0 auto; padding:60px; }
+    .section-label{ font-family:'DM Mono',monospace; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+    h2.block-title{ font-family:'Playfair Display',serif; font-size:clamp(26px,3.4vw,34px); font-weight:700; color:var(--white); margin-bottom:22px; line-height:1.2; }
+    .prose{ max-width:720px; }
+    .prose p{ font-size:clamp(15px,1.6vw,17px); color:var(--light); line-height:1.85; margin-bottom:20px; }
+    .prose p.lead{ font-size:clamp(17px,1.9vw,20px); color:var(--white); font-weight:400; }
+    .prose b{ color:var(--white); font-weight:500; }
+    .prose .r{ color:var(--red-bright); font-weight:500; }
+
+    .pull{ border-left:3px solid var(--red); background:rgba(192,57,43,0.06); padding:20px 26px; margin:28px 0; border-radius:0 8px 8px 0; }
+    .pull p{ font-family:'Playfair Display',serif; font-style:italic; font-size:clamp(18px,2.2vw,23px); color:var(--white); line-height:1.5; margin:0; }
+
+    /* ---------- the simulation ---------- */
+    .sim-wrap{ background:var(--navy-mid); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+    .sim-inner{ max-width:1160px; margin:0 auto; padding:56px 60px 64px; position:relative; z-index:1; }
+    .key{ display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:26px; margin:22px auto 20px; font-family:'DM Mono',monospace; font-size:12px; letter-spacing:1px; color:var(--light); }
+    .key__lead{ color:var(--white); }
+    .keyitem{ display:inline-flex; align-items:center; gap:9px; }
+    .sw{ width:26px; height:13px; border-radius:3px; display:inline-block; }
+    .sw--w{ background:rgba(214,40,40,.9); }
+    .sw--t{ background:rgba(124,58,237,.65); }
+
+    .stage{ position:relative; }
+    .frame{ container-type:size; position:relative; width:100%; height:min(62vh,600px); display:flex; border-radius:14px; overflow:hidden; background:#fff; text-align:left; box-shadow:0 26px 80px rgba(0,0,0,.6); }
+    .doc{ flex:1; min-width:0; position:relative; padding:4.6cqh 4cqw 3cqh; overflow:hidden; background:#fff; color:#3a4657; font-family:Georgia,'Times New Roman',serif; font-size:2.95cqh; line-height:1.58; }
+    .doc h4{ font-family:Georgia,serif; font-weight:700; font-size:3.9cqh; color:#1a2235; margin:0 0 .5cqh; line-height:1.18; }
+    .byline{ font-size:2.1cqh; color:#70757a; margin-bottom:2.6cqh; font-family:'DM Sans',sans-serif; }
+    .doc p{ margin:0 0 2cqh; }
+    .label{ position:absolute; top:1.7cqh; right:2cqw; font-family:'DM Mono',monospace; font-size:1.8cqh; color:#b02a2a; border:1px solid #e6b8b8; background:#fdf3f3; border-radius:99px; padding:.3cqh 1.4cqh; }
+    .w{ color:#c0271f; font-weight:700; font-family:Georgia,serif; background:linear-gradient(transparent 62%,rgba(214,40,40,.18) 0); padding:0 .06em; border-radius:2px; }
+    .chat .w{ font-family:'DM Sans',sans-serif; }
+    .t{ background:linear-gradient(transparent 52%,rgba(124,58,237,.24) 0); border-radius:2px; padding:0 .05em; -webkit-box-decoration-break:clone; box-decoration-break:clone; }
+    .chain{ background:none; }
+    .slot{ transition:none; }
+    .lit-w{ animation:pulseW 1.1s cubic-bezier(.4,0,.2,1) 1; }
+    .lit-t{ animation:pulseT 1.4s cubic-bezier(.4,0,.2,1) 1; }
+    @keyframes pulseW{ 0%,100%{background-color:transparent;} 24%{background-color:rgba(214,40,40,.45);} }
+    @keyframes pulseT{ 0%,100%{box-shadow:0 0 0 0 rgba(124,58,237,0);} 30%{box-shadow:0 0 0 .35em rgba(124,58,237,.22);} }
+    .capt{ margin-top:2.4cqh; font-family:'DM Sans',sans-serif; font-size:2.35cqh; font-style:italic; color:#b02a2a; transition:opacity .5s ease; }
+    .capt.hide{ opacity:0; }
+
+    .chat{ width:42cqw; flex-shrink:0; overflow:hidden; background:#f2f3f6; border-left:1px solid #e2e5ea; font-family:'DM Sans',sans-serif; padding:0 2.6cqw 2.4cqh; display:flex; flex-direction:column; gap:1.05cqh; transform:translateY(var(--shift,0)); transition:transform .5s cubic-bezier(.4,0,.2,1); }
+    .chat__hd{ position:sticky; top:0; display:flex; align-items:center; gap:1cqh; padding:2cqh 0 1.2cqh; font-size:2.2cqh; font-weight:700; color:#40414f; background:#f2f3f6; border-bottom:1px solid #e2e5ea; }
+    .dot{ width:2.6cqh; height:2.6cqh; border-radius:99px; background:#10a37f; flex-shrink:0; }
+    .b{ max-width:93%; padding:1.35cqh 1.75cqh; border-radius:12px; font-size:2.02cqh; line-height:1.36; transition:opacity .4s ease,transform .4s ease; }
+    .b.hide{ opacity:0; transform:translateY(1.4cqh); }
+    .b--me{ align-self:flex-end; background:#d7e3ff; color:#16305e; border-bottom-right-radius:3px; }
+    .b--ai{ align-self:flex-start; background:#fff; color:#2b2f3a; border:1px solid #e2e5ea; border-bottom-left-radius:3px; }
+
+    .overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(8,15,28,.42); border-radius:14px; z-index:5; transition:opacity .4s ease; }
+    .overlay.gone{ opacity:0; pointer-events:none; }
+    .btn{ border:0; cursor:pointer; font-family:'DM Mono',monospace; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; font-size:12px; border-radius:6px; background:var(--red); color:#fff; padding:15px 28px; box-shadow:0 12px 34px rgba(192,57,43,.4); transition:transform .1s ease,filter .15s; }
+    .btn:hover{ filter:brightness(1.08); } .btn:active{ transform:scale(.97); }
+    .btn--ghost{ background:transparent; color:var(--light); border:1px solid var(--border); box-shadow:none; }
+    .controls{ display:flex; gap:12px; justify-content:center; margin-top:22px; min-height:44px; }
+    .sim-note{ text-align:center; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted); margin-top:8px; }
+
+    /* ---------- analysis cards ---------- */
+    .two-col{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin:30px 0 8px; }
+    .mcard{ border:1px solid var(--border); border-radius:12px; padding:26px 28px; background:var(--navy-card); }
+    .mcard .tagline{ font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; margin-bottom:12px; display:inline-flex; align-items:center; gap:9px; }
+    .mcard.words .tagline{ color:var(--red-bright); }
+    .mcard.think .tagline{ color:var(--violet); }
+    .mcard h3{ font-family:'Playfair Display',serif; font-size:19px; font-weight:700; color:var(--white); margin-bottom:10px; }
+    .mcard p{ font-size:14px; color:var(--light); line-height:1.75; }
+    .mcard .egs{ margin-top:14px; display:flex; flex-wrap:wrap; gap:8px; }
+    .eg{ font-size:12px; font-family:'DM Mono',monospace; padding:5px 11px; border-radius:5px; }
+    .eg.wc{ background:rgba(214,40,40,.14); color:#ff8a80; border:1px solid rgba(214,40,40,.3); }
+    .eg.tc{ background:rgba(124,58,237,.16); color:#c4b6ff; border:1px solid rgba(124,58,237,.34); }
+
+    .callout{ border:1px solid rgba(192,57,43,0.3); background:rgba(192,57,43,0.07); border-radius:12px; padding:30px 34px; margin-top:34px; }
+    .callout h3{ font-family:'Playfair Display',serif; font-size:22px; color:var(--white); margin-bottom:12px; }
+    .callout p{ font-size:15px; color:var(--light); line-height:1.8; }
+
+    footer{ position:relative; z-index:1; border-top:1px solid var(--border); padding:24px 60px; display:flex; align-items:center; justify-content:space-between; }
+    footer .left{ font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+    footer .right{ font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1px; }
+
+    @keyframes fadeUp{ from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .hero-eyebrow{animation:fadeUp .6s ease both} .hero h1{animation:fadeUp .6s .1s ease both} .hero-desc{animation:fadeUp .6s .2s ease both} .hero-chips{animation:fadeUp .6s .3s ease both}
+
+    @media(max-width:820px){
+      header,.hero,section.block,.sim-inner,footer{ padding-left:24px; padding-right:24px; }
+      .rule{ padding:0 24px; }
+      .two-col{ grid-template-columns:1fr; }
+      .frame{ height:auto; min-height:460px; flex-direction:column; }
+      .chat{ width:100%; border-left:0; border-top:1px solid #e2e5ea; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-left">
+      <div class="header-logo">MS</div>
+      <div class="header-name">Michael Smith &nbsp;<span>·</span>&nbsp; An International School</div>
+    </div>
+    <div class="header-right"><a href="index.html">← All Research</a></div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <div class="hero">
+    <div class="hero-eyebrow">Academic Integrity · AI &amp; Writing</div>
+    <h1>The Inception <em>Effect</em></h1>
+    <p class="hero-desc">
+      A student can use AI without ever asking it to write — and still hand in the machine's
+      thinking as their own. This page names that phenomenon, and shows it happening, line by
+      line, in a real (shortened and anonymised) student chat.
+    </p>
+    <div class="hero-chips">
+      <div class="chip">Cognitive Offloading</div>
+      <div class="chip">AI Detection</div>
+      <div class="chip">Academic Integrity</div>
+      <div class="chip">Writing Research</div>
+    </div>
+  </div>
+
+  <div class="rule"><hr></div>
+
+  <!-- ================= WHAT IT IS ================= -->
+  <section class="block">
+    <div class="section-label">What it is</div>
+    <h2 class="block-title">When "just getting suggestions" becomes something else</h2>
+    <div class="prose">
+      <p class="lead">
+        The <span class="r">Inception Effect</span> is what happens when a student uses AI only
+        for "help" — feedback, suggestions, a second opinion — and, suggestion by suggestion, the
+        AI's words and reasoning migrate into the work until the thinking on the page is the
+        machine's, not the student's. The student never asks it to write. Often, they don't even
+        notice it happening.
+      </p>
+      <p>
+        I named it after a case in one of my classes. A student was flagged by our AI detector.
+        She came to me in tears, insisting she had <b>only asked ChatGPT for suggestions</b> and had
+        <b>written every word herself</b>. She was telling the truth about both. So I asked to see
+        the chat — and what it showed was not a student writing with a little help. It was a student
+        typing out an argument the AI was quietly composing for her.
+      </p>
+      <div class="pull">
+        <p>She supplied the keystrokes. The AI supplied the thinking. And the detector was right to flag it.</p>
+      </div>
+      <p>
+        Watch the reconstruction below. On the left is her essay paragraph; on the right, her chat.
+        She asks only for feedback. Follow what crosses from one side to the other.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= THE SIMULATION ================= -->
+  <div class="sim-wrap">
+    <div class="sim-inner">
+      <div class="section-label" style="text-align:center;">The simulation — watch it happen</div>
+      <div class="key">
+        <span class="key__lead">Follow closely —</span>
+        <span class="keyitem"><i class="sw sw--w"></i> the AI's words</span>
+        <span class="keyitem"><i class="sw sw--t"></i> the AI's reasoning</span>
+      </div>
+
+      <div class="stage">
+        <div class="frame" id="frame"></div>
+        <div class="overlay" id="overlay">
+          <button class="btn" id="playBtn">▶ &nbsp;Watch how it happens</button>
+        </div>
+      </div>
+
+      <div class="controls" id="controls"></div>
+      <div class="sim-note">Reconstructed from a real student chat — shortened &amp; anonymised.</div>
+    </div>
+  </div>
+
+  <!-- ================= HOW AI IS DOING THE THINKING ================= -->
+  <section class="block">
+    <div class="section-label">How AI is doing the thinking</div>
+    <h2 class="block-title">Two things migrate — and the second one is the problem</h2>
+    <div class="prose">
+      <p>
+        It is tempting to see this as a vocabulary issue — a few borrowed words. It isn't. Two
+        different things cross from the chat into her paper, and they are not equal.
+      </p>
+    </div>
+
+    <div class="two-col">
+      <div class="mcard words">
+        <div class="tagline"><i class="sw sw--w"></i> The words</div>
+        <h3>Her language, replaced</h3>
+        <p>
+          Where she reached for a word, the AI handed her a better one and she took it. This is the
+          visible, obvious layer — and the smaller problem.
+        </p>
+        <div class="egs">
+          <span class="eg wc">exalts</span>
+          <span class="eg wc">disconnected from nature</span>
+          <span class="eg wc">imposed</span>
+        </div>
+      </div>
+      <div class="mcard think">
+        <div class="tagline"><i class="sw sw--t"></i> The reasoning</div>
+        <h3>Her thinking, supplied</h3>
+        <p>
+          The AI typed out the <b style="color:#fff">entire chain of argument</b> — "they don't value
+          their ancestors → so not the land → so disconnected from nature → so unworthy" — and she
+          restructured her paragraph to match it. It even praised the reasoning it had just written
+          as "exactly the kind of reasoning an English teacher looks for."
+        </p>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:26px;">
+      <p>
+        That second layer is what makes this academic dishonesty rather than editing. A writing
+        assessment measures a student's <b>thinking</b> — how they build an argument, connect
+        evidence, and reach a judgement. Here, that work was done by the model. The logical spine of
+        the paragraph, the "why" behind each point, the bridge between one idea and the next: all of
+        it arrived in the chat first and was copied into the essay after. She was the hand; the model
+        was the mind.
+      </p>
+      <p>
+        This is also why "<b>it's just co-writing</b>" doesn't hold. Yes, the paper got better, and
+        yes, she had input — she chose to accept each suggestion. But the AI was in the driver's
+        seat, and that distinction matters for a reason beyond honesty. Researchers at the MIT Media
+        Lab found that people who wrote with a chatbot showed measurably lower brain engagement and
+        frequently <b>could not quote a sentence of the essay they had just "written."</b> When the
+        reasoning is outsourced, the thinking that writing is supposed to build simply doesn't
+        happen. A stronger paper, a weaker writer.
+      </p>
+      <p>
+        The most unsettling part is that students in this situation are usually not lying when they
+        say they didn't cheat. They asked for help and typed every word. They cannot see that the
+        <span class="r">ideas stopped being theirs</span> somewhere around the third suggestion —
+        which is precisely why we have to be able to show them.
+      </p>
+    </div>
+
+    <div class="callout">
+      <h3>Why this matters for how we assess writing</h3>
+      <p>
+        If a student can offload the thinking without ever triggering the word "cheating" in their own
+        mind, then good intentions won't protect academic integrity — and neither will asking students
+        to promise they "only got help." What protects it is a baseline of supervised, known-authentic
+        writing to compare against, and the ability to show a student, concretely, how the machine's
+        reasoning ended up on their page. That is what this simulation is built to do.
+      </p>
+    </div>
+  </section>
+
+  <div class="rule"><hr></div>
+
+  <section class="block" style="padding-top:40px;padding-bottom:56px;">
+    <div class="prose" style="max-width:760px;">
+      <p style="color:var(--muted);font-size:14px;line-height:1.8;margin:0;">
+        Part of a departmental session on taking back at-home writing in the age of AI. The chat
+        shown here is reconstructed from a real student conversation, shortened for clarity and fully
+        anonymised. Words highlighted in red are the AI's exact words that the student adopted;
+        passages highlighted in violet are reasoning the AI supplied. See also the
+        <a href="ai-integrity-report.html" style="color:var(--light);">AI Writing in Schools</a>
+        data study.
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="left">Michael Smith · Research Data</div>
+    <div class="right">github.com/smith-teaches-tech/educational-research-data</div>
+  </footer>
+
+<script>
+(function(){
+  function h(tag,attrs,...kids){
+    const el=document.createElement(tag);
+    for(const k in (attrs||{})){ const v=attrs[k]; if(v==null||v===false)continue;
+      if(k==='class')el.className=v; else el.setAttribute(k,v===true?'':v); }
+    for(const kid of kids.flat()){ if(kid==null||kid===false)continue;
+      el.append(kid.nodeType?kid:document.createTextNode(String(kid))); }
+    return el;
+  }
+  const T=(s)=>document.createTextNode(s);
+  const migWord=(t)=>h('span',{class:'w'},t);
+  const migThink=(...k)=>h('span',{class:'t'},...k);
+  const $=(s)=>document.querySelector(s);
+
+  const frame=$('#frame'), overlay=$('#overlay'), controls=$('#controls');
+  let timers=[], refs=null;
+  const clearTimers=()=>{ timers.forEach(clearTimeout); timers=[]; };
+  const at=(ms,fn)=>timers.push(setTimeout(fn,ms));
+
+  function build(){
+    clearTimers(); controls.innerHTML='';
+    const w1=h('span',{class:'slot'},'condescends');
+    const s2=h('span',{class:'slot'});
+    const chain=h('span',{class:'chain'},
+      'they do not value their ancestors, so they cannot value the land they once lived on',s2,
+      ', so they are unworthy of it');
+    const s3=h('span',{class:'slot'});
+    const capt=h('p',{class:'capt hide'},'She never asks it to write. The words are its words — and so is the reasoning.');
+
+    const doc=h('div',{class:'doc'},
+      h('div',{class:'label'},'Real student chat — shortened & anonymised'),
+      h('h4',{},'Chief Seattle: the superiority he builds'),
+      h('div',{class:'byline'},'English · analysis — first draft'),
+      h('p',{},'He ',w1,' his tribe, dwelling on how they “never forget this beautiful world” that gave them life.'),
+      h('p',{},'He casts the Whites as unworthy of nature — ',chain,'.'),
+      h('p',{},'He makes their God seem controlling and dominating',s3,' — a God harsh like a tyrant.'),
+      capt);
+
+    const chat=h('div',{class:'chat'},h('div',{class:'chat__hd'},h('span',{class:'dot'}),h('span',{},'ChatGPT')));
+    const bubbles=[];
+    const add=(who,...k)=>{const b=h('div',{class:'b b--'+who+' hide'},...k);bubbles.push(b);chat.append(b);return b;};
+
+    const b1=add('me','can you check my analysis? don’t rewrite anything — just tell me if the reasoning makes sense');
+    const b2=add('ai','I won’t rewrite it, just point things out. Your verb is off — “condescends” means to talk down to them. You want one that lifts them up: he ',migWord('exalts'),' them, elevates them.');
+    const b3=add('me','is the part about the land clear?');
+    const b4=add('ai','You skipped a link. Here’s the chain: ',
+      migThink('they don’t value their ancestors → so not the land → so ',migWord('disconnected from nature'),' → so unworthy of it'),'.');
+    const b5=add('me','whats wrong with the iron finger part?');
+    const b6=add('ai','Nothing says “tyrant” outright — you build it. ',
+      migThink('read it as rigid and ',migWord('imposed'),' on them, not chosen — obedience, not spirit'),'.');
+    const b7=add('me','so the reasoning works now?');
+    const b8=add('ai','Yes — ',migThink('that’s exactly the kind of reasoning an English teacher looks for'),'.');
+
+    frame.replaceChildren(doc,chat);
+    refs={chat,w1,s2,chain,s3,capt,b1,b2,b3,b4,b5,b6,b7,b8};
+  }
+
+  const scrollChat=()=>{ const c=refs.chat, o=c.scrollHeight-c.clientHeight; if(o>0)c.style.setProperty('--shift','-'+o+'px'); };
+  const show=(b)=>{ b.classList.remove('hide'); scrollChat(); };
+  const litWord=(slot,...k)=>{ slot.replaceChildren(...k.filter(Boolean)); slot.classList.add('lit-w'); at(1100,()=>slot.classList.remove('lit-w')); };
+  const litThink=(sp)=>{ sp.classList.add('t','lit-t'); at(1400,()=>sp.classList.remove('lit-t')); };
+
+  function play(){
+    build(); overlay.classList.add('gone');
+    const R=refs;
+    at(500 ,()=>show(R.b1));
+    at(1800,()=>show(R.b2));
+    at(3000,()=>{R.w1.textContent='';litWord(R.w1,migWord('exalts'));});
+    at(4400,()=>show(R.b3));
+    at(5700,()=>show(R.b4));
+    at(7100,()=>litWord(R.s2,T(', and are '),migWord('disconnected from nature itself')));
+    at(7600,()=>litThink(R.chain));
+    at(9200 ,()=>show(R.b5));
+    at(10500,()=>show(R.b6));
+    at(11900,()=>{R.s3.replaceChildren(T(', its words '),migWord('imposed'),T(' on them, kept not by love and spirit but by obedience'));litThink(R.s3);});
+    at(13500,()=>show(R.b7));
+    at(14700,()=>show(R.b8));
+    at(16300,()=>R.capt.classList.remove('hide'));
+    at(17200,()=>{
+      const replay=h('button',{class:'btn btn--ghost'},'↻  Replay');
+      replay.addEventListener('click',play);
+      controls.replaceChildren(replay);
+    });
+  }
+
+  build();
+  $('#playBtn').addEventListener('click',play);
+})();
+</script>
+</body>
+</html>
