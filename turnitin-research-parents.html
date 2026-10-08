@@ -363,9 +363,9 @@
 <body>
 
 <header>
-  <div class="eyebrow">Academic Integrity · 2025–2026</div>
+  <div class="eyebrow">Academic Integrity · Updated October 2026</div>
   <h1>Is AI Detection Reliable? Here's What Our Internal Research Shows.</h1>
-  <p class="subtitle">A plain-language summary of the data we gathered this year on Turnitin's AI detection tool — and what it means for your student's academic work.</p>
+  <p class="subtitle">A plain-language summary of what we found when we tested Turnitin's AI detector — for parents, and for students — and what it means for the writing students do at home.</p>
 </header>
 
 <main>
@@ -439,15 +439,61 @@
     </div>
   </section>
 
+  <!-- SECTION 2B: SUPERVISED IN-CLASS WRITING (NEW, OCT 2026) -->
+  <section>
+    <div class="section-tag">New · October 2026</div>
+    <h2>This Year's Students, Writing in Front of Me: Zero Flags</h2>
+    <p>Old papers only prove so much. So this term I tested the detector on the strongest evidence I could get: <strong>writing by current students, produced in class, while I watched their screens</strong>. I know who wrote every word. Here is what Turnitin said.</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green);">0<span style="font-size:20px; color:var(--ink-muted);">/20</span></div>
+        <div class="stat-label">IB Language Paragraph<br>flagged for AI</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green);">0<span style="font-size:20px; color:var(--ink-muted);">/14</span></div>
+        <div class="stat-label">AP Language Queen Elizabeth<br>Paragraph flagged for AI</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--green);">0<span style="font-size:20px; color:var(--ink-muted);">/28</span></div>
+        <div class="stat-label">IB K&amp;K Framework<br>flagged for AI</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">All Known-Human Writing — Separately and Together</div>
+      <div style="display:grid; grid-template-columns:1fr auto 1fr auto 1.2fr; gap:12px; align-items:center; text-align:center;">
+        <div>
+          <div class="stat-num" style="color:var(--green); font-size:36px;">43</div>
+          <div class="stat-label">Pre-AI &amp; known-author papers</div>
+        </div>
+        <div style="font-family:'Lora',serif; font-size:24px; color:var(--ink-muted);">+</div>
+        <div>
+          <div class="stat-num" style="color:var(--green); font-size:36px;">62</div>
+          <div class="stat-label">Supervised in-class papers, 2026</div>
+        </div>
+        <div style="font-family:'Lora',serif; font-size:24px; color:var(--ink-muted);">=</div>
+        <div style="background:var(--green-light); border-radius:10px; padding:16px 10px;">
+          <div class="stat-num" style="color:var(--ink); font-size:48px;">105</div>
+          <div class="stat-label" style="color:var(--green); font-weight:500;">human-written documents<br>0 flagged</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>A note to students:</strong> if you write it yourself, the detector stays quiet. Sixty-two of you just proved it. Your own writing — in your own voice, with your own mistakes — is not what gets flagged.
+    </div>
+  </section>
+
   <!-- SECTION 3: BEFORE vs NOW -->
   <section>
     <div class="section-tag">The Data</div>
-    <h2>Before AI vs. This Year: A Clear Shift</h2>
-    <p>The most direct test is a simple comparison: run the detector on papers written <em>before</em> AI tools existed, then on papers submitted this year. The same tool, the same essay types, the same school.</p>
+    <h2>When the Writing Goes Home, the Flags Begin</h2>
+    <p>Now compare all of that known-human writing with essays our IB students wrote <strong>at home</strong> in 2025–26 (Extended Essays and TOK essays). The same tool, the same school, students of the same age. The only difference is where the writing happened.</p>
 
     <div class="chart-row">
       <div class="chart-card">
-        <div class="chart-title">Pre-AI Papers (Before 2022–23)</div>
+        <div class="chart-title">Known-Human Writing (105 documents)</div>
         <div class="bar-compare">
           <div class="bar-item">
             <div class="bar-label-row">
@@ -464,15 +510,15 @@
               <strong style="color:var(--green);">100%</strong>
             </div>
             <div class="bar-track">
-              <div class="bar-fill" style="width:100%; background:var(--green);">28 of 28 papers</div>
+              <div class="bar-fill" style="width:100%; background:var(--green);">105 of 105</div>
             </div>
           </div>
         </div>
-        <p style="font-size:12px; color:var(--ink-muted); margin-top:16px; line-height:1.6;">28 IB-style essays written before ChatGPT was released — submitted to Turnitin's current model. Every single one returned 0% AI.</p>
+        <p style="font-size:12px; color:var(--ink-muted); margin-top:16px; line-height:1.6;">43 pre-AI and known-author papers plus 62 papers written in class under supervision in 2026. Not one was flagged.</p>
       </div>
 
       <div class="chart-card">
-        <div class="chart-title">Papers Received This Year (2025–26)</div>
+        <div class="chart-title">Written at Home (Cohort 14 EE + TOK, 68 papers)</div>
         <div class="bar-compare">
           <div class="bar-item">
             <div class="bar-label-row">
@@ -502,12 +548,16 @@
             </div>
           </div>
         </div>
-        <p style="font-size:12px; color:var(--ink-muted); margin-top:16px; line-height:1.6;">The same tool that returned 0% on pre-AI papers now flags 31% of this year's submissions — a shift we cannot attribute to the detector.</p>
+        <p style="font-size:12px; color:var(--ink-muted); margin-top:16px; line-height:1.6;">21 of 68 flagged above 20%, and 41 of 68 (60%) showing some AI signal. The same tool that cleared every supervised paper.</p>
       </div>
     </div>
 
     <div class="callout callout-green">
-      <strong>The key point:</strong> Because Turnitin returns 0% on papers written before AI existed, we know the increase in flagging is not a tool problem. The baseline for authentic student writing from this school is 0%. The tool has not changed. Student behavior has.
+      <strong>The key point:</strong> Turnitin returns 0% on writing we know is human — old papers and this year's supervised papers alike. So the flags on at-home writing are not a tool problem. The baseline for authentic student writing at this school is 0%. The tool is the same in both rooms. What changes is whether anyone is watching.
+    </div>
+
+    <div class="callout callout-amber">
+      <strong>And in between:</strong> on two other in-class assignments where I did <em>not</em> watch students' screens, two papers came back flagged for some AI. When I watch screens, I never get flags. When I don't, I do. Either this is a classroom application of Heisenberg's uncertainty principle — observing the student changes the result — or, when I'm not watching, something else is happening. (I'm an English teacher. I'll let the physicists decide.)
     </div>
   </section>
 
@@ -516,7 +566,7 @@
     <div class="section-tag">Voluntary Disclosure Studies</div>
     <h2>We Asked Students to Come Forward — And They Did</h2>
     <p>Across two separate studies — one in AP Language, one involving IB Extended Essays — students were informed that papers had been reviewed and were invited to come forward voluntarily if they had used AI. There were <strong>no consequences</strong> for disclosure. Students did not know whether they had been flagged or not.</p>
-    <p>The results were striking in two directions: the students who came forward were overwhelmingly the ones Turnitin had flagged — and not one student who had received a 0% score came forward to suggest the tool had wrongly accused them.</p>
+    <p>The results were striking in two directions: the students who came forward were overwhelmingly the ones Turnitin had flagged — and not one flagged student came forward to say the tool had wrongly accused them.</p>
 
     <!-- HEADLINE STAT -->
     <div class="highlight-box">
@@ -532,8 +582,8 @@
       </div>
       <div class="amnesty-card">
         <div class="amnesty-num" style="color:var(--green);">0</div>
-        <div style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:6px;">Students at 0% who disputed their result</div>
-        <div class="amnesty-desc">Not one student who received a clean 0% score came forward to say the tool had wrongly flagged them. The students who came forward were the students the tool had identified.</div>
+        <div style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:6px;">Flagged students who disputed their flag</div>
+        <div class="amnesty-desc">Not one of the 26 flagged students came forward to say the tool had got it wrong. The students who came forward were the students the tool had identified.</div>
       </div>
     </div>
 
@@ -677,7 +727,7 @@
   <section>
     <div class="section-tag">Conclusion</div>
     <h2>What This Means</h2>
-    <p>The data points in one direction. Turnitin's AI detector, used at the 20% threshold, is a reliable tool. It does not flag authentic student writing. It correctly identifies AI-generated content. And when students who were flagged were given a private, consequence-free opportunity to come forward, most did — confirming what the tool had already found.</p>
+    <p>The data points in one direction. Turnitin's AI detector, used at the 20% threshold, is a reliable tool. It does not flag authentic student writing — 105 human-written documents, including 62 written by current students in class, and not one was flagged. It correctly identifies AI-generated content. And when students who were flagged were given a private, consequence-free opportunity to come forward, most did — confirming what the tool had already found.</p>
     <p>This is not about punishing students or assuming the worst. It is about ensuring that the work students submit genuinely represents their own thinking and effort — which is the foundation of any meaningful academic credential.</p>
     <div class="callout callout-green">
       <strong>Questions?</strong> If you have questions about how this data relates to your student's work specifically, please reach out directly. All data in this report is aggregate and anonymised.
