@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turnitin Evidence Review · Michael Smith</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink:#1a1a2e; --ink-soft:#3d3d5c; --ink-muted:#6e6e8c;
+    --rule:#e2e2ec; --bg:#fcfcfb; --white:#ffffff; --panel:#f5f5f9;
+    --flag:#b8432f; --star:#d99a2b; --clear:#1f8a5f;
+    --flag-bg:#fbefec; --star-bg:#fdf6e8; --clear-bg:#eaf5ef;
+    --accent:#1a5c8a; --accent-bg:#eaf1f8;
+  }
+  html { scroll-behavior:smooth; }
+  body { font-family:'DM Sans',sans-serif; background:var(--bg); color:var(--ink); line-height:1.7; font-size:16px; }
+
+  .topbar { background:var(--white); border-bottom:1px solid var(--rule); padding:16px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .brand { display:flex; align-items:center; gap:12px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--ink-muted); }
+  .logo { width:32px; height:32px; border-radius:6px; background:#c0392b; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; letter-spacing:0; flex-shrink:0; }
+  .topbar a { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink-muted); text-decoration:none; white-space:nowrap; }
+  .topbar a:hover { color:var(--ink); }
+
+  header.hero { background:var(--white); border-bottom:1px solid var(--rule); padding:56px 24px 44px; }
+  .hero-inner { max-width:860px; margin:0 auto; }
+  .eyebrow { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:var(--ink-muted); margin-bottom:16px; }
+  h1 { font-family:'Lora',serif; font-size:clamp(28px,5vw,44px); font-weight:700; line-height:1.18; margin-bottom:16px; }
+  .subtitle { font-size:17px; color:var(--ink-soft); font-weight:300; max-width:680px; line-height:1.65; }
+  .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+  .meta span { font-family:'DM Mono',monospace; font-size:11px; color:var(--ink-soft); background:var(--panel); border:1px solid var(--rule); border-radius:4px; padding:5px 12px; }
+
+  main { max-width:860px; margin:0 auto; padding:0 24px 72px; }
+  section { padding:48px 0; border-bottom:1px solid var(--rule); }
+  section:last-of-type { border-bottom:none; }
+  .tag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--ink-muted); margin-bottom:8px; }
+  h2 { font-family:'Lora',serif; font-size:clamp(21px,3vw,27px); font-weight:700; line-height:1.3; margin-bottom:16px; }
+  h3 { font-family:'Lora',serif; font-size:18px; font-weight:600; margin:28px 0 10px; }
+  p { color:var(--ink-soft); font-size:15.5px; line-height:1.8; margin-bottom:16px; }
+  p:last-child { margin-bottom:0; }
+  a { color:var(--accent); }
+  .small { font-size:13px; color:var(--ink-muted); line-height:1.65; }
+
+  /* at a glance */
+  .glance { background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:28px 30px; margin-top:-28px; position:relative; box-shadow:0 8px 30px rgba(26,26,46,0.05); }
+  .glance h2 { font-size:20px; margin-bottom:14px; }
+  .glance ol { padding-left:22px; display:flex; flex-direction:column; gap:10px; }
+  .glance li { color:var(--ink-soft); font-size:15px; line-height:1.65; padding-left:4px; }
+  .glance li::marker { font-family:'DM Mono',monospace; color:var(--ink-muted); font-size:13px; }
+
+  /* tables */
+  .tbl-wrap { overflow-x:auto; margin:20px 0; border:1px solid var(--rule); border-radius:10px; background:var(--white); }
+  table { width:100%; border-collapse:collapse; font-size:14px; min-width:520px; }
+  th, td { padding:11px 14px; text-align:left; border-bottom:1px solid var(--rule); vertical-align:top; }
+  th { font-family:'DM Mono',monospace; font-size:10.5px; letter-spacing:1px; text-transform:uppercase; color:var(--ink-muted); font-weight:500; background:var(--panel); }
+  td { color:var(--ink-soft); }
+  td.num, th.num { text-align:right; font-family:'DM Mono',monospace; white-space:nowrap; }
+  tr:last-child td { border-bottom:none; }
+  tr.total td { background:var(--panel); color:var(--ink); font-weight:500; }
+  .pill { display:inline-block; font-family:'DM Mono',monospace; font-size:12px; padding:1px 8px; border-radius:99px; }
+  .pill.f { background:var(--flag-bg); color:#8f2f1f; }
+  .pill.s { background:var(--star-bg); color:#7a5208; }
+  .pill.c { background:var(--clear-bg); color:#16603f; }
+
+  /* callouts */
+  .note { border-radius:10px; padding:18px 22px; margin:22px 0; font-size:14.5px; line-height:1.75; color:var(--ink-soft); }
+  .note.info { background:var(--accent-bg); border-left:4px solid var(--accent); }
+  .note.caution { background:var(--star-bg); border-left:4px solid var(--star); }
+  .note .lbl { font-family:'DM Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--ink); display:block; margin-bottom:4px; }
+
+  /* chart */
+  .chart { background:var(--white); border:1px solid var(--rule); border-radius:12px; padding:24px 24px 18px; margin:22px 0; }
+  .chart-title { font-family:'Lora',serif; font-size:17px; font-weight:600; color:var(--ink); margin-bottom:4px; }
+  .chart-sub { font-size:13px; color:var(--ink-muted); margin-bottom:16px; }
+  .legend { display:flex; flex-wrap:wrap; gap:18px; margin-bottom:18px; font-size:13px; color:var(--ink-soft); }
+  .legend i { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:7px; vertical-align:-1px; }
+  .row { display:grid; grid-template-columns:200px 1fr; gap:14px; align-items:center; margin-bottom:12px; }
+  .row-label { font-size:13.5px; color:var(--ink); line-height:1.35; }
+  .row-label small { display:block; font-size:12px; color:var(--ink-muted); }
+  .bar { display:flex; height:30px; gap:2px; }
+  .seg { position:relative; height:100%; display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:11.5px; color:#fff; cursor:default; min-width:4px; }
+  .seg:first-child { border-radius:4px 0 0 4px; }
+  .seg:last-child { border-radius:0 4px 4px 0; }
+  .seg:only-child { border-radius:4px; }
+  .seg.f { background:var(--flag); }
+  .seg.s { background:var(--star); color:var(--ink); }
+  .seg.c { background:var(--clear); }
+  .seg .tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; font-family:'DM Sans',sans-serif; font-size:12px; padding:6px 10px; border-radius:6px; white-space:nowrap; opacity:0; pointer-events:none; transition:opacity .15s; z-index:5; }
+  .seg:hover .tip, .seg:focus .tip { opacity:1; }
+  .divider-row { border-top:1px dashed var(--rule); margin:16px 0 14px; }
+
+  /* steps */
+  .steps { counter-reset:step; display:flex; flex-direction:column; gap:14px; margin:22px 0; }
+  .step { counter-increment:step; display:grid; grid-template-columns:40px 1fr; gap:14px; background:var(--white); border:1px solid var(--rule); border-radius:10px; padding:16px 18px; }
+  .step::before { content:counter(step); width:32px; height:32px; border-radius:50%; background:var(--accent-bg); color:var(--accent); font-family:'DM Mono',monospace; font-size:14px; display:flex; align-items:center; justify-content:center; }
+  .step h4 { font-family:'Lora',serif; font-size:16px; font-weight:600; color:var(--ink); margin-bottom:4px; }
+  .step p { font-size:14.5px; margin:0; }
+
+  ul.plain, ol.plain { padding-left:22px; margin:12px 0 18px; }
+  ul.plain li, ol.plain li { color:var(--ink-soft); font-size:15px; line-height:1.75; margin-bottom:8px; }
+
+  .sources li { font-size:13.5px; margin-bottom:8px; color:var(--ink-soft); }
+
+  footer { background:var(--white); border-top:1px solid var(--rule); padding:24px; text-align:center; font-size:12px; color:var(--ink-muted); }
+
+  @media (max-width:640px) {
+    .row { grid-template-columns:1fr; gap:6px; }
+    .glance { padding:22px 20px; }
+    .topbar .brand span.long { display:none; }
+  }
+  @media print {
+    .topbar { display:none; }
+    .glance { box-shadow:none; margin-top:0; }
+    section { page-break-inside:avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><div class="logo">MS</div><span class="long">Michael Smith · Research Data</span></div>
+  <a href="index.html">← All Research</a>
+</div>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Academic Integrity · Evidence Review · October 2026</div>
+    <h1>Turnitin's AI Detector at Our School: What the Evidence Shows, Where It Falls Short, and How It Can Let Writing Go Home</h1>
+    <p class="subtitle">A plain summary of four years of classroom data, set beside the outside research, for the AI task force. It covers what the numbers support, what they don't, and the classroom routine I use to send writing home again.</p>
+    <div class="meta">
+      <span>Prepared by Michael Smith</span>
+      <span>Data: 2022 to 2026</span>
+      <span>About 260 student and control documents</span>
+      <span>All student data anonymised</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="glance">
+    <h2>At a glance</h2>
+    <ol>
+      <li>Across 105 documents I know were written by humans (43 older papers plus 62 papers students wrote in class this term while I watched their screens), Turnitin flagged none at the 20% threshold. The 62 supervised papers showed no AI signal of any kind: every one scored 0%.</li>
+      <li>On essays written at home in 2025–26 (IB Cohort 14 Extended Essay and TOK essay), 21 of 68 papers (31%) were flagged at 20% or above, and 41 of 68 (60%) showed some AI signal once the lower, less reliable *% scores are included.</li>
+      <li>When students were offered a consequence-free chance to disclose AI use, 20 of the 26 flagged students (77%) came forward. One student who wasn't flagged also came forward.</li>
+      <li>Outside research agrees that Turnitin rarely flags fully human writing, but it misses a good deal of AI writing, struggles with mixed human and AI text, and can be beaten with paraphrasing tools. A flag is strong grounds for a conversation; it isn't proof on its own.</li>
+      <li>In my own classes, three supervised writes followed by an open look at the data has been enough to let writing go home again, with occasional flags that I can manage case by case.</li>
+    </ol>
+  </div>
+
+  <!-- 1 -->
+  <section>
+    <div class="tag">1 · Purpose</div>
+    <h2>Why I put this together</h2>
+    <p>Most of the argument about AI detectors happens without local data. Teachers have heard that detectors are unreliable, so many have stopped trusting the score, and some have stopped assigning writing at home altogether. I wanted to know whether that distrust holds up at our school, with our students, so I've spent the last few years testing Turnitin against writing whose authorship I'm sure of and comparing it with the writing students do on their own.</p>
+    <p>I should be upfront about two things. I'm the teacher who collected most of this data, so I'm not a neutral party; I've tried to make up for that by showing every count, including the awkward ones, and by setting my numbers beside outside research that's more critical than I am. And this is classroom research, not a controlled study. The groups are small and they differ in ways I describe in Section 8. I think the pattern is clear enough to act on, but the task force should weigh it knowing those limits.</p>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <div class="tag">2 · Background</div>
+    <h2>How Turnitin reports an AI score</h2>
+    <p>Turnitin gives each submission an estimate of how much of the text looks AI-generated. How it displays that estimate matters a great deal for how we read the results, because Turnitin deliberately hides the low scores it trusts least.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>What the teacher sees</th><th>What it means</th><th>Turnitin's stated reliability</th></tr></thead>
+        <tbody>
+          <tr><td><span class="pill c">0%</span></td><td>No AI writing detected.</td><td>The normal result for human writing in its testing.</td></tr>
+          <tr><td><span class="pill s">*%</span></td><td>An estimate somewhere between 1% and 19%. The number and highlights are withheld.</td><td>A signal, but a weak one. Turnitin hides these because readings at this level "may be unreliable." I report them separately and don't treat them as evidence against an individual student.</td></tr>
+          <tr><td><span class="pill f">20% or more</span></td><td>A flag. The score and the highlighted passages are shown.</td><td>Turnitin reports a document-level false positive rate under 1% at this level, from 800,000 academic papers written before ChatGPT. Individual highlighted sentences have a false positive rate of about 4%.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two more details from Turnitin matter here. The detector won't score a submission under 300 words, so any paper under that length has no AI result and is left out of every count in this report. And Turnitin's own research found that for short texts (150 to 299 words), false positives rose well above its 1% target, especially for English language learners. Those figures come from the company, so they're a starting point rather than independent proof; Section 7 sets them against outside studies.</p>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <div class="tag">3 · Finding 1</div>
+    <h2>Writing I know is human: 105 documents, none flagged</h2>
+    <p>The first question is the one teachers worry about most: does Turnitin accuse students who wrote their own work? To test that, I gathered writing where I'm certain of the author. Some of it predates ChatGPT (released November 2022). The largest set is new: 62 pieces current students wrote this term in my classroom while I watched their screens.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Set</th><th>When written</th><th class="num">Papers</th><th class="num">Flagged 20%+</th><th class="num">*%</th><th class="num">0%</th></tr></thead>
+        <tbody>
+          <tr><td>IB Extended Essays (this school)</td><td>2022</td><td class="num">14</td><td class="num">0</td><td class="num">0</td><td class="num">14</td></tr>
+          <tr><td>IB TOK essays (this school)</td><td>2022</td><td class="num">15</td><td class="num">0</td><td class="num">0</td><td class="num">15</td></tr>
+          <tr><td>AP Research papers</td><td>Early 2023</td><td class="num">9</td><td class="num">0</td><td class="num">1*</td><td class="num">8</td></tr>
+          <tr><td>My own graduate papers</td><td>Pre-ChatGPT</td><td class="num">5</td><td class="num">0</td><td class="num">0</td><td class="num">5</td></tr>
+          <tr><td>IB Language Paragraph (supervised, in class)</td><td>Oct 2026</td><td class="num">20</td><td class="num">0</td><td class="num">0</td><td class="num">20</td></tr>
+          <tr><td>AP Language Queen Elizabeth Paragraph (supervised, in class)</td><td>Oct 2026</td><td class="num">14</td><td class="num">0</td><td class="num">0</td><td class="num">14</td></tr>
+          <tr><td>IB K&amp;K Framework (supervised, in class)</td><td>Oct 2026</td><td class="num">28</td><td class="num">0</td><td class="num">0</td><td class="num">28</td></tr>
+          <tr class="total"><td>All known-human writing</td><td></td><td class="num">105</td><td class="num">0</td><td class="num">1</td><td class="num">104</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">* One AP Research paper scored *% rather than 0%. These papers were written in early 2023, just as ChatGPT arrived, so I can't rule out that this student had already started using it. I've kept it in the known-human set to be conservative; removing it would only strengthen the result.</p>
+    <p>As a check in the other direction, I wrote one essay with ChatGPT, paragraph by paragraph, the way I've seen students use it. Turnitin scored it 100%.</p>
+    <p>The supervised set is the part I'd point the task force to first. The older papers show the tool doesn't flag pre-AI writing; the supervised papers show it doesn't flag writing by our current students, at their current level, in 2026. That's the claim teachers most need settled before they'll trust a flag.</p>
+    <div class="note caution">
+      <span class="lbl">In class, but screens not watched</span>
+      On two other in-class assignments this term, students wrote in the room with me but I didn't watch their screens. Of about 30 papers, none were flagged at 20% or above, but two came back at *%. That's a small number and a weak signal, and I haven't investigated those two papers. Still, it fits everything else here. When I watch screens, I get no signal at all; when I'm in the room but not watching, a couple of weak signals appear; when the writing goes home, the flags begin. (It's tempting to call this Heisenberg's uncertainty principle applied to a classroom. The more ordinary explanation is that some students reach for AI when nobody is watching.)
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <div class="tag">4 · Finding 2</div>
+    <h2>Writing done at home: IB Cohort 14</h2>
+    <p>The comparison set is IB Cohort 14's two big externally assessed essays from 2025–26. Students wrote both at home over several weeks, the way most of our major writing has always been done.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Assessment</th><th>Submitted</th><th class="num">Papers</th><th class="num">Flagged 20%+</th><th class="num">*%</th><th class="num">0%</th></tr></thead>
+        <tbody>
+          <tr><td>Extended Essay</td><td>Sept 2025</td><td class="num">34</td><td class="num">8 (23.5%)</td><td class="num">8 (23.5%)</td><td class="num">18 (52.9%)</td></tr>
+          <tr><td>TOK essay</td><td>Jan 2026</td><td class="num">34</td><td class="num">13 (38.2%)</td><td class="num">12 (35.3%)</td><td class="num">9 (26.5%)</td></tr>
+          <tr class="total"><td>Both</td><td></td><td class="num">68</td><td class="num">21 (30.9%)</td><td class="num">20 (29.4%)</td><td class="num">27 (39.7%)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Among flagged papers, the average AI score was 37.6% on the Extended Essay (range 23% to 89%) and 49.2% on the TOK essay (range 24% to 100%). Six students were flagged on both.</p>
+    <p>The *% papers matter too, with a caveat. A *% result is a signal, since Turnitin found something it estimates at between 1% and 19% AI, but Turnitin itself says readings at that level may be unreliable. So I report two numbers. The firm one is the 31% flagged at 20% or above. The broader one is 60% (41 of 68) showing any signal at all. I wouldn't act against an individual student on a *% alone, but across a whole cohort the pattern is worth noticing, especially because it's absent from the supervised writing: when students write in front of me, Turnitin finds no signal of any kind.</p>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <div class="tag">5 · Side by side</div>
+    <h2>Supervised writing and at-home writing compared</h2>
+    <div class="chart" role="figure" aria-label="Stacked bars showing the share of papers flagged, starred and cleared for four groups">
+      <div class="chart-title">Turnitin results by writing condition</div>
+      <div class="chart-sub">Share of papers in each result band. Hover a segment for the count.</div>
+      <div class="legend">
+        <span><i style="background:var(--flag)"></i>Flagged 20%+</span>
+        <span><i style="background:var(--star)"></i>*% (1–19%, a weaker signal)</span>
+        <span><i style="background:var(--clear)"></i>0%</span>
+      </div>
+
+      <div class="row">
+        <div class="row-label">Pre-AI &amp; known-author papers<small>2022–2023 · n = 43</small></div>
+        <div class="bar">
+          <div class="seg s" style="flex:1" tabindex="0"><span class="tip">*%: 1 of 43</span></div>
+          <div class="seg c" style="flex:42" tabindex="0">98%<span class="tip">0%: 42 of 43</span></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="row-label">Supervised, in class<small>Oct 2026 · n = 62</small></div>
+        <div class="bar">
+          <div class="seg c" style="flex:62" tabindex="0">100%<span class="tip">0%: 62 of 62</span></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="row-label">In class, screens not watched<small>Oct 2026 · about 30</small></div>
+        <div class="bar">
+          <div class="seg s" style="flex:2" tabindex="0"><span class="tip">*%: 2 of about 30</span></div>
+          <div class="seg c" style="flex:28" tabindex="0">93%<span class="tip">0%: about 28 of 30</span></div>
+        </div>
+      </div>
+      <div class="divider-row"></div>
+      <div class="row">
+        <div class="row-label">At home: Extended Essay<small>Sept 2025 · n = 34</small></div>
+        <div class="bar">
+          <div class="seg f" style="flex:8" tabindex="0">24%<span class="tip">Flagged: 8 of 34</span></div>
+          <div class="seg s" style="flex:8" tabindex="0">24%<span class="tip">*%: 8 of 34</span></div>
+          <div class="seg c" style="flex:18" tabindex="0">53%<span class="tip">0%: 18 of 34</span></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="row-label">At home: TOK essay<small>Jan 2026 · n = 34</small></div>
+        <div class="bar">
+          <div class="seg f" style="flex:13" tabindex="0">38%<span class="tip">Flagged: 13 of 34</span></div>
+          <div class="seg s" style="flex:12" tabindex="0">35%<span class="tip">*%: 12 of 34</span></div>
+          <div class="seg c" style="flex:9" tabindex="0">26%<span class="tip">0%: 9 of 34</span></div>
+        </div>
+      </div>
+      <p class="small" style="margin-top:14px;">Percentages are rounded, so a row may not sum to exactly 100. The tables in Sections 3 and 4 hold the exact counts; the unwatched in-class group is an approximate count of about 30 papers.</p>
+    </div>
+    <p>The gap is large. None of the 105 known-human papers were flagged, and the 62 supervised papers showed no signal at all; 21 of the 68 at-home papers were flagged, and 41 showed some signal. I've resisted putting a significance test on it, because the groups aren't comparable enough for one to mean much (Section 8 explains why). What the comparison does show is narrower and, I think, more useful. Our own students' writing, done under supervision, doesn't trip the detector, so a flag on at-home work can't be explained away as the tool misreading how teenagers write.</p>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <div class="tag">6 · Finding 3</div>
+    <h2>When offered amnesty, flagged students came forward</h2>
+    <p>In two studies, one in AP Language and one with the Extended Essay, I told every student that papers had been reviewed and invited anyone who had used AI to say so, with no consequence for doing so. The invitation went to all students regardless of their score.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Study</th><th class="num">Papers</th><th class="num">Flagged 20%+</th><th class="num">Flagged, came forward</th><th class="num">Not flagged, came forward</th></tr></thead>
+        <tbody>
+          <tr><td>AP Language</td><td class="num">57</td><td class="num">18</td><td class="num">14 (78%)</td><td class="num" rowspan="2" style="vertical-align:middle;">1 in total</td></tr>
+          <tr><td>Extended Essay (Cohort 14)</td><td class="num">34</td><td class="num">8</td><td class="num">6 (75%)</td></tr>
+          <tr class="total"><td>Both</td><td class="num">91</td><td class="num">26</td><td class="num">20 (77%)</td><td class="num">1</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Six flagged students didn't respond. Some may simply have chosen not to admit it; some could be genuine false positives. I can't tell which from the score alone, and that's exactly the case a supervised writing comparison is meant to settle.</p>
+    <p>The one unflagged student who came forward is a reminder that the detector misses things. And the disclosures themselves understated what happened. All six Extended Essay students described their use as minor (brainstorming, grammar, outlining), but when I looked closely at two of them, AI had rewritten whole paragraphs. Self-reporting is useful, but it can't be the basis for an integrity decision either.</p>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <div class="tag">7 · Outside evidence</div>
+    <h2>What independent research says</h2>
+    <p>My numbers are small and local, so they need checking against larger studies. The outside picture is more mixed than my data alone, and I think the mix is worth understanding rather than smoothing over.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Source</th><th>What was tested</th><th>Main result</th><th>What it means for us</th></tr></thead>
+        <tbody>
+          <tr><td>Turnitin (2023)</td><td>800,000 pre-ChatGPT academic papers</td><td>Under 1% false positives at the document level for scores of 20%+; about 4% at the sentence level.</td><td>The vendor's own figure. It matches my 0 of 105, but it isn't independent.</td></tr>
+          <tr><td>Temple University (2023)</td><td>120 texts: human, AI, paraphrased AI, and mixed</td><td>28 of 30 human texts scored correctly (93%). Fully AI texts were caught 77% of the time; mixed texts were scored correctly only 43% of the time. Highlighted sentences didn't match the AI sentences.</td><td>Good at clearing human writing. Weaker at catching AI, and the highlights shouldn't be used to pinpoint which sentences are AI.</td></tr>
+          <tr><td>Perkins et al. (2024)</td><td>Six detectors, 805 samples, with and without evasion tricks</td><td>Accuracy at catching AI text was 39.5%, falling to 17.4% once the text was altered. The authors say detectors "cannot currently be recommended for determining whether violations of academic integrity have occurred."</td><td>Detectors miss a lot of AI writing, especially paraphrased text. This study is about missed AI, not about false accusations, but its caution about using scores as proof applies to us.</td></tr>
+          <tr><td>Liang et al. (2023, Stanford)</td><td>Seven detectors on essays by non-native English writers</td><td>Those detectors flagged non-native writing at high rates. Turnitin wasn't among them.</td><td>A real concern for a school with many English language learners.</td></tr>
+          <tr><td>Turnitin (Oct 2023)</td><td>Up to 2,000 texts per group, L1 and L2 English writers</td><td>No statistically significant difference for texts of 300+ words; a larger gap and higher false positives for shorter texts.</td><td>Again the vendor's own figure. It suggests short pieces deserve extra care.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Read together, the outside research and my data point the same way on the question teachers worry about most. When Turnitin flags a fully human paper at 20% or above, that's rare. The larger weakness runs the other way: it misses AI writing, particularly when the text has been paraphrased or blended with the student's own. So a 0% isn't a guarantee, and a flag is a strong reason to look closer. Neither one settles a case on its own.</p>
+  </section>
+
+  <!-- 8 -->
+  <section>
+    <div class="tag">8 · Limits</div>
+    <h2>What this evidence doesn't show</h2>
+    <ol class="plain">
+      <li><strong>The in-class and at-home groups aren't matched.</strong> They're different students doing different tasks. The supervised pieces are shorter and timed; the Extended Essay and TOK essay are long, researched, and written over weeks. Some of the gap could come from the type of task rather than where it was written.</li>
+      <li><strong>The Extended Essay to TOK rise isn't a clean trend.</strong> Flagging went from 23.5% to 38.2% between September and January, but those are different assessments. I'd read it as two snapshots, not proof that AI use grew by a set amount.</li>
+      <li><strong>The samples are small and come from one school.</strong> A single false positive among a few hundred papers would be consistent with Turnitin's stated rate and wouldn't show up reliably in samples this size.</li>
+      <li><strong>Short submissions are excluded.</strong> Turnitin doesn't score anything under 300 words, so those papers have no result and aren't counted anywhere in this report.</li>
+      <li><strong>I'm both the teacher and the researcher.</strong> I've reported every count I have, including the *% results and the unexplained cases, but the task force should know the data wasn't gathered by an independent party.</li>
+      <li><strong>The amnesty results depend on students' choices.</strong> Students who came forward may differ from those who didn't in ways the data can't show.</li>
+    </ol>
+  </section>
+
+  <!-- 9 -->
+  <section>
+    <div class="tag">9 · Practice</div>
+    <h2>How I brought writing back home</h2>
+    <p>The reason I collected all of this was practical. Like a lot of teachers, I'd pulled most writing into class because I couldn't trust what came back from home. That fixes the integrity problem but costs students the long, slow writing they need. The routine below is how I've moved writing back home in my own classes. It works because students see the evidence for themselves, and because the logic of it is simple: you wrote in front of me three times and weren't flagged once, so if your at-home work is flagged, we both know why.</p>
+    <div class="steps">
+      <div class="step"><div><h4>Put every piece of writing through Turnitin from the start</h4><p>Supervised and unsupervised, short and long. The score becomes routine rather than a threat saved for suspicious cases.</p></div></div>
+      <div class="step"><div><h4>Have students write in class three times, with screens visible</h4><p>I watch the screens. These pieces are each student's baseline, and I know they're authentic.</p></div></div>
+      <div class="step"><div><h4>Show the class its own results, anonymised</h4><p>Students see row after row of 0% from writing they did in front of me. This is the moment the argument lands: the tool doesn't flag them when they write their own work.</p></div></div>
+      <div class="step"><div><h4>Show the pre-AI papers</h4><p>The 28 IB essays from 2022 all scored 0%. They answer the "detectors flag everyone" rumour with data from our own school.</p></div></div>
+      <div class="step"><div><h4>Show the at-home results</h4><p>The Cohort 14 figures, anonymised. Students can see the difference between supervised and unsupervised writing for themselves.</p></div></div>
+      <div class="step"><div><h4>State the rule plainly</h4><p>AI isn't permitted on this assignment. You've written three times without being flagged. If this piece is flagged, the explanation is AI use, and the assignment will fail.</p></div></div>
+      <div class="step"><div><h4>Send the writing home</h4><p>Students get the time and space that real writing needs.</p></div></div>
+    </div>
+    <p>Since I started doing this, AI-written work in my classes has more or less disappeared. There are still occasional flags, and I deal with each one individually; they've been few enough to manage. I haven't yet run this as a formal study across a full year, so the result is my account as the teacher rather than a measured outcome, and that's something the task force might want to test more widely.</p>
+    <div class="note info">
+      <span class="lbl">Where this needs care at school level</span>
+      Turnitin's own figures mean a false positive is unlikely but possible. Each student's three supervised baselines give us a fair way to check a flag: compare the flagged paper with the student's own supervised writing, talk with the student, and if needed have them write again under supervision before any grade decision. The consequence I use in class (failing the assignment) would need to sit inside whatever process the school adopts, including the student's right to explain and appeal.
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section>
+    <div class="tag">10 · For discussion</div>
+    <h2>Questions and options for the task force</h2>
+    <p>These follow from the evidence above. I've framed them as options because the right policy depends on choices the task force has to make about consistency, workload and due process.</p>
+    <ul class="plain">
+      <li><strong>Should the 20% threshold be the school's line?</strong> The data supports treating a 20%+ score as grounds for follow-up, and treating *% as a weak signal that's worth noting but not enough to act on alone.</li>
+      <li><strong>Should a flag start a process rather than decide a case?</strong> One option is a fixed sequence: conversation, comparison with supervised baselines, a supervised rewrite, then a decision.</li>
+      <li><strong>Should supervised baselines be expected early in each course?</strong> Three short supervised writes per student make every later flag much easier to judge fairly.</li>
+      <li><strong>Should teachers show students the evidence?</strong> In my classes, seeing their own 0% results seems to do more for deterrence than the threat of detection alone.</li>
+      <li><strong>What counts as proof of authorship?</strong> Google Docs revision history records typing, not where the ideas came from, so on its own it's weak evidence.</li>
+      <li><strong>Should data be collected school-wide?</strong> More teachers running the same routine would tell us whether my results hold beyond my own classes.</li>
+    </ul>
+  </section>
+
+  <!-- APPENDIX -->
+  <section>
+    <div class="tag">Appendix</div>
+    <h2>Data sources and outside research</h2>
+    <h3>School data</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Dataset</th><th>Condition</th><th class="num">n</th></tr></thead>
+        <tbody>
+          <tr><td>2022 IB Extended Essays</td><td>Pre-ChatGPT, this school</td><td class="num">14</td></tr>
+          <tr><td>2022 IB TOK essays</td><td>Pre-ChatGPT, this school</td><td class="num">15</td></tr>
+          <tr><td>2023 AP Research papers</td><td>Early 2023</td><td class="num">9</td></tr>
+          <tr><td>Graduate papers (author's own)</td><td>Pre-ChatGPT</td><td class="num">5</td></tr>
+          <tr><td>ChatGPT-written control essay</td><td>Written with AI on purpose</td><td class="num">1</td></tr>
+          <tr><td>Supervised in-class writing</td><td>Oct 2026, screens watched (IB Language Paragraph 20, AP Language Queen Elizabeth 14, IB K&amp;K Framework 28)</td><td class="num">62</td></tr>
+          <tr><td>In-class writing, screens not watched</td><td>Oct 2026, two assignments</td><td class="num">~30</td></tr>
+          <tr><td>IB Cohort 14 Extended Essay</td><td>At home, Sept 2025</td><td class="num">34</td></tr>
+          <tr><td>IB Cohort 14 TOK essay</td><td>At home, Jan 2026</td><td class="num">34</td></tr>
+          <tr><td>AP Language amnesty study</td><td>At home, with disclosure invitation</td><td class="num">57</td></tr>
+          <tr class="total"><td>Total documents</td><td>The Extended Essay set appears in both Finding 2 and Finding 3 and is counted once. Submissions under 300 words received no score and are excluded.</td><td class="num">about 261</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Outside research</h3>
+    <ul class="plain sources">
+      <li>Turnitin (2023). <a href="https://www.turnitin.co.uk/blog/ai-writing-detection-update-from-turnitins-chief-product-officer">AI writing detection update from Turnitin's Chief Product Officer</a>.</li>
+      <li>Turnitin (2023). <a href="https://www.turnitin.co.uk/blog/understanding-the-false-positive-rate-for-sentences-of-our-ai-writing-detection-capability">Understanding the false positive rate for sentences of our AI writing detection capability</a>.</li>
+      <li>Turnitin Help Center. <a href="https://helpcenter.turnitin.com/hc/en-us/articles/46245332050317-Why-is-the-AI-Writing-Detection-report-score-showing-as">Why is the AI Writing Detection report score showing as *%?</a></li>
+      <li>Turnitin (2023). <a href="https://www.turnitin.ca/blog/new-research-turnitin-s-ai-detector-shows-no-statistically-significant-bias-against-english-language-learners">New research: Turnitin's AI detector shows no statistically significant bias against English Language Learners</a>.</li>
+      <li>Temple University Center for the Advancement of Teaching (2023). <a href="https://teaching.temple.edu/sites/teaching/files/media/document/Evaluating%20the%20Effectiveness%20of%20Turnitin%E2%80%99s%20AI%20Writing%20Indicator%20Model_0.pdf">Evaluating the Effectiveness of Turnitin's AI Writing Indicator Model</a>.</li>
+      <li>Perkins, M. et al. (2024). <a href="https://arxiv.org/abs/2403.19148">GenAI Detection Tools, Adversarial Techniques and Implications for Inclusivity in Higher Education</a>. International Journal of Educational Technology in Higher Education.</li>
+      <li>Liang, W. et al. (2023). <a href="https://mlanthology.org/iclrw/2023/liang2023iclrw-gpt">GPT Detectors Are Biased Against Non-Native English Writers</a>.</li>
+    </ul>
+    <p class="small" style="margin-top:18px;">Related pages on this site: <a href="ai-integrity-report.html">AI Writing in Schools: What the Data Tells Us</a> (the full staff report), <a href="turnitin-research-parents.html">the parent and student summary</a>, and <a href="inception-effect.html">The Inception Effect</a>.</p>
+  </section>
+
+</main>
+
+<footer>Turnitin Evidence Review · Michael Smith · October 2026 · All student data is anonymised and reported in aggregate.</footer>
+
+</body>
+</html>
